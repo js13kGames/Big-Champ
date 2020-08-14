@@ -1,0 +1,9 @@
+Day 1:
+A big fat NOTHING for ideas today! Brainstormed for a bit with Paul and Jon. All of my ideas are TERRIBLE (a game about palindromes, really?!), but you always gotta blow through the bad ones first. So... progress??!
+
+The only real work I did today was create the GitHub project and slap a skeleton setup in there (a copy of the tk framework I made last week: <a href="https://github.com/regularkid/tk">here</a>). It doesn't do much of anything other than provide a game loop, let you check input, play sfx (thanks <a href="https://github.com/KilledByAPixel/ZzFX">ZzFX</a>!), and draw stuff. No frills or anything fancy, but for a "micro" game it'll be plenty :)
+
+Hope to get some inspiration tomorrow!
+
+Progress:
+<Game>
