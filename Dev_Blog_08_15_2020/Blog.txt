@@ -1,0 +1,22 @@
+Day 3:
+I've got an idea! This usually means making new connections with things that are already floating around in my head. I recently saw a tweet from <a href="https://twitter.com/johanpeitz/status/1289194707315314688">Johan Peitz</a> showing off some rope physics in Pico8 and I thought it looked fun! It popped up in my mind again when I was googling "404" images today and saw a few "404 not found" pages that showed the ends of two disconnected power cords:
+
+<images>.
+
+Aha! What if the game was about trying to reconnect power cords and they were using rope physics? Physics are always fun to play with, so hopefully I can use that to my advantage! Combine that with a simple input mechanic and a cute character face (like the one on my wife's new earbuds case: <image>) and we've got ourselves a game!
+
+A couple quick design sketches later and we're ready to start coding! Work for the day is literally just rendering rectangles and some super hacky logic to test out an Angry Birds style input mechanic that "throws" the plug at some disconnected terminal to give it power again. Feels "meh" at the moment, but I see potential and am excited to begin messing with ropes! Let's keep going!
+
+Progress:
+<Game>
+
+Links:
+Rope Physics:
+https://twitter.com/johanpeitz/status/1289194707315314688
+
+ 404 Pages with Plugs:
+https://www.google.com/imgres?imgurl=https%3A%2F%2Fmagecomp.com%2Fblog%2Fwp-content%2Fuploads%2F2019%2F12%2FHow-to-Fix-404-Error-Page-Not-Found-In-Admin-URL-in-Magento-2.png&imgrefurl=https%3A%2F%2Fmagecomp.com%2Fblog%2Ffix-404-error-page-not-found-admin-url-magento-2%2F&tbnid=6UrS325L96ejeM&vet=12ahUKEwjc6KCO_Z3rAhUYhp4KHYGrCEYQMyhhegQIARB8..i&docid=iniSvSqxe7RIwM&w=1080&h=540&q=404&ved=2ahUKEwjc6KCO_Z3rAhUYhp4KHYGrCEYQMyhhegQIARB8 
+
+https://www.google.com/imgres?imgurl=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F667%2F830%2Foriginal%2F404-error-page-not-found-with-two-men-plugging-in-cords.jpg&imgrefurl=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F667830-404-error-page-not-found-with-two-men-plugging-in-cords&tbnid=YNcXMarfet-m5M&vet=10CG4QMyiZAWoXChMI4JS3mf2d6wIVAAAAAB0AAAAAEAI..i&docid=5rOByJlWelaFeM&w=6250&h=5000&q=404&ved=0CG4QMyiZAWoXChMI4JS3mf2d6wIVAAAAAB0AAAAAEAI
+
+https://www.google.com/imgres?imgurl=http%3A%2F%2Fblog.linkody.com%2Fwp-content%2Fuploads%2F2017%2F09%2Fwhat-is-a-404-error1-1024x657.png&imgrefurl=https%3A%2F%2Fblog.linkody.com%2Fwhat-is-a-404-error&tbnid=K0qkL89yxVSEQM&vet=10CFkQMyiPAWoXChMI4JS3mf2d6wIVAAAAAB0AAAAAEAI..i&docid=6l4zuPXaP14SYM&w=1024&h=657&q=404&ved=0CFkQMyiPAWoXChMI4JS3mf2d6wIVAAAAAB0AAAAAEAI
