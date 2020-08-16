@@ -13,8 +13,8 @@ canvas.setAttribute("width", gameWidth);
 canvas.setAttribute("height", gameHeight);
 canvas.style.width = `${gameWidth * gameScale}px`;
 canvas.style.height = `${gameHeight * gameScale}px`;
-canvas.style.backgroundColor = "black";
-canvas.style.imageRendering = "pixelated";
+//canvas.style.backgroundColor = "#FFFFFFFF";
+//canvas.style.imageRendering = "pixelated";
 document.getElementById("game").appendChild(canvas);
 ctx = this.canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
@@ -103,17 +103,18 @@ zzfx=    // play sound
 class V2
 {
     constructor(x, y) { this.x = x != undefined ? x : 0; this.y = y != undefined ? y : 0; }
+    Set(x, y) { this.x = x; this.y = y; }
     SetV(v) { this.x = v.x; this.y = v.y; }
     SetToFrom(v1, v2) { this.x = v2.x - v1.x; this.y = v2.y - v1.y; }
     AddV(v) { this.x += v.x; this.y += v.y }
     SubV(v) { this.x -= v.x; this.y -= v.y }
     MulS(s) { this.x *= s; this.y *= s; }
     DivS(s) { this.x /= s; this.y /= s; }
-    Dist(v)
+    DistTo(v)
     {
-        return Math.sqrt(this.DistSq(v));
+        return Math.sqrt(this.DistToSq(v));
     }
-    DistSq(v)
+    DistToSq(v)
     {
         let dx = this.x - v.x;
         let dy = this.y - v.y;
@@ -121,7 +122,7 @@ class V2
     }
     Len()
     {
-        return Math.sqrt(LenSq());
+        return Math.sqrt(this.LenSq());
     }
     LenSq()
     {
@@ -150,7 +151,7 @@ class V2
 state = null;
 nextState = null;
 Enter = 0; Tick = 1; Exit = 2;
-clearColor = "#000";
+clearColor = "#D67FFFFF";
 GameLoop = () =>
 {
     window.requestAnimationFrame(GameLoop);

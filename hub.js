@@ -12,6 +12,6 @@ class Hub
 
     Draw()
     {
-        DrawRect(this.pos.x, this.pos.y, 32, 32, "#444", 0.0);
+        DrawRect(this.pos.x, this.pos.y, 32, 32, "#222", 0.0);
     }
 }

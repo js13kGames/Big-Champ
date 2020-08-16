@@ -16,6 +16,7 @@ class Plug
         this.dragOrig = new V2();
         this.angle = 0;
         this.state = PlugStateIdle;
+        this.rope = new Rope(this);
     }
 
     Tick()
@@ -40,35 +41,49 @@ class Plug
             {
                 this.pos.AddV(this.vel);
                 this.vel.y += 0.25;
+
+                // Bounce/friction?
+                if (this.pos.x < 0 || this.pos.x > gameWidth)
+                {
+                    this.vel.x = -this.vel.x*0.7;
+                    this.vel.y *= 0.8;
+                    this.pos.x = Math.max(Math.min(this.pos.x, gameWidth), 0);
+                }
+                if (this.pos.y < 0 || this.pos.y > gameHeight)
+                {
+                    this.vel.y = -this.vel.y*0.7;
+                    this.vel.x *= 0.8;
+                    this.pos.y = Math.max(Math.min(this.pos.y, gameHeight), 0);
+                }
+
+                // Face move direction
                 this.angle = Math.atan2(this.vel.y, this.vel.x) * Rad2Deg;
 
                 // Connect to hub?
-                let dSq = this.pos.DistSq(hub.pos);
+                let dSq = this.pos.DistToSq(hub.pos);
                 if (dSq < 24*24)
                 {
                     this.state = PlugStateConnected;
-                }
-
-                // Debug reset
-                if (this.pos.x > gameWidth || this.pos.x < 0 || this.pos.y > gameHeight || this.pos.y < 0)
-                {
-                    this.Reset();
                 }
             } break;
 
             case PlugStateConnected:
             {
-                // Debug reset
-                if (touch.up)
-                {
-                    this.Reset();
-                }
             } break;
         }
+
+        this.rope.Tick();
     }
 
     Draw()
     {
-        DrawRect(this.pos.x, this.pos.y, 24, 16, "#888", this.angle);
+        this.rope.Draw();
+        ctx.save();
+        ctx.translate(this.pos.x, this.pos.y);
+        ctx.rotate(this.angle * Deg2Rad);
+        DrawRect(0, 0, 16, 16, "#444");
+        DrawRect(8, -3, 10, 2, "#444");
+        DrawRect(8, 3, 10, 2, "#444");
+        ctx.restore();
     }
 }
