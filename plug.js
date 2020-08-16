@@ -1,3 +1,7 @@
+let PlugStateIdle = 0;
+let PlugStateThrowing = 1;
+let PlugStateConnected = 2;
+
 class Plug
 {
     constructor()
@@ -7,72 +11,64 @@ class Plug
 
     Reset()
     {
-        this.x = 60;
-        this.y = 170;
+        this.pos = new V2(60, 170);
+        this.vel = new V2();
+        this.dragOrig = new V2();
         this.angle = 0;
-        this.isConnected = false;
-        this.isThrowing = false;
+        this.state = PlugStateIdle;
     }
 
     Tick()
     {
-        if (this.isConnected)
+        switch (this.state)
         {
-            // Debug reset
-            if (touch.up)
+            case PlugStateIdle:
             {
-                this.Reset();
-            }
-        }
-        else if (this.isThrowing)
-        {
-            this.x += this.vx;
-            this.y += this.vy;
-            this.vy += 0.25;
-            this.angle = Math.atan2(this.vy, this.vx) * Rad2Deg;
-
-            // Connect to hub?
-            let dx = hub.x - this.x;
-            let dy = hub.y - this.y;
-            let dSq = (dx*dx) + (dy*dy);
-            if (dSq < 24*24)
-            {
-                this.isThrowing = false;
-                this.isConnected = true;
-            }
-
-            // Debug reset
-            if (this.x > gameWidth || this.x < 0 || this.y > gameHeight || this.y < 0)
-            {
-                this.Reset();
-            }
-        }
-        else
-        {
-            if (touch.down)
-            {
-                this.xDragOrig = touch.x;
-                this.yDragOrig = touch.y;
-            }
-            if (touch.up)
-            {
-                this.vx = (this.xDragOrig - touch.x);
-                this.vy = (this.yDragOrig - touch.y);
-                let dSq = (this.vx*this.vx) + (this.vy*this.vy);
-                let vMax = 10;
-                if (dSq > vMax*vMax)
+                if (touch.down)
                 {
-                    let d = Math.sqrt(dSq);
-                    this.vx = (this.vx / d) * vMax;
-                    this.vy = (this.vy / d) * vMax;
+                    this.dragOrig.SetV(touch);
                 }
-                this.isThrowing = true;
-            }
+                if (touch.up)
+                {
+                    this.vel.SetToFrom(touch, this.dragOrig);
+                    this.vel.ClampMax(10);
+                    this.state = PlugStateThrowing;
+                }
+            } break;
+
+            case PlugStateThrowing:
+            {
+                this.pos.AddV(this.vel);
+                this.vel.y += 0.25;
+                this.angle = Math.atan2(this.vel.y, this.vel.x) * Rad2Deg;
+
+                // Connect to hub?
+                let dSq = this.pos.DistSq(hub.pos);
+                if (dSq < 24*24)
+                {
+                    this.state = PlugStateConnected;
+                }
+
+                // Debug reset
+                if (this.pos.x > gameWidth || this.pos.x < 0 || this.pos.y > gameHeight || this.pos.y < 0)
+                {
+                    this.Reset();
+                }
+            } break;
+
+            case PlugStateConnected:
+            {
+                // Debug reset
+                if (touch.up)
+                {
+                    this.Reset();
+                }
+            } break;
         }
     }
 
     Draw()
     {
-        DrawRect(this.x, this.y, 24, 16, "#888", this.angle);
+        DrawRect(this.pos.x, this.pos.y, 24, 16, "#888", this.angle);
     }
 }

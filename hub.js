@@ -2,8 +2,7 @@ class Hub
 {
     constructor()
     {
-        this.x = 340;
-        this.y = 100;
+        this.pos = new V2(340, 100);
     }
 
     Tick()
@@ -13,6 +12,6 @@ class Hub
 
     Draw()
     {
-        DrawRect(this.x, this.y, 32, 32, "#444", 0.0);
+        DrawRect(this.pos.x, this.pos.y, 32, 32, "#444", 0.0);
     }
 }
