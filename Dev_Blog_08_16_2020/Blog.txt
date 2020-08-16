@@ -1,0 +1,12 @@
+Day 4:
+Today was all about rope physics! I got the bare minimum implemented and it's already sort of addicting - I keep throwing the plug just to watch the rope... that's a good sign! Needed to get back up to speed on Verlet integration (it's been a while!), but there are a bunch of great tutorials out there: <links>. It's pretty awesome that such little code results in "rope physics" :)
+
+The rest of the day was some code cleanup on plug "state management" and the addition of a quick and dirty 2D vector class (easier than manually doing math all over the place, plus this will help reduce the final code size).
+
+Progress:
+<Game>
+
+Links:
+https://gamedevelopment.tutsplus.com/tutorials/simulate-tearable-cloth-and-ragdolls-with-simple-verlet-integration--gamedev-519
+https://syncgamedev.wordpress.com/2017/05/03/flexible-constraints-with-verlet-integration/
+https://www.youtube.com/watch?v=FcnvwtyxLds&feature=youtu.be
