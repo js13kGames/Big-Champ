@@ -8,7 +8,7 @@ class Rope
         this.points = [];
         for (let i = 0; i < this.numPoints; ++i)
         {
-            this.points.push(new V2(root.pos.x, Math.min((root.pos.y + this.segLen*i), gameHeight - 10)));
+            this.points.push(new V2(root.pos.x + 0.5, Math.min((root.pos.y + this.segLen*i), gameHeight - 10)));
             this.points[i].xLast = this.points[i].x;
             this.points[i].yLast = this.points[i].y;
         }

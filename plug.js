@@ -31,7 +31,7 @@ class Plug
                 }
                 if (touch.up)
                 {
-                    this.vel.SetToFrom(touch, this.dragOrig);
+                    this.vel.SetToFrom(touch, this.dragOrig) * 1.5;
                     this.vel.ClampMax(10);
                     this.state = PlugStateThrowing;
                 }
@@ -45,14 +45,14 @@ class Plug
                 // Bounce/friction?
                 if (this.pos.x < 0 || this.pos.x > gameWidth)
                 {
-                    this.vel.x = -this.vel.x*0.7;
-                    this.vel.y *= 0.8;
+                    this.vel.x = -this.vel.x*0.8;
+                    this.vel.y *= 0.9;
                     this.pos.x = Math.max(Math.min(this.pos.x, gameWidth), 0);
                 }
                 if (this.pos.y < 0 || this.pos.y > gameHeight)
                 {
-                    this.vel.y = -this.vel.y*0.7;
-                    this.vel.x *= 0.8;
+                    this.vel.y = -this.vel.y*0.8;
+                    this.vel.x *= 0.9;
                     this.pos.y = Math.max(Math.min(this.pos.y, gameHeight), 0);
                 }
 
@@ -61,8 +61,11 @@ class Plug
 
                 // Connect to hub?
                 let dSq = this.pos.DistToSq(hub.pos);
-                if (dSq < 24*24)
+                if (dSq < 20*20)
                 {
+                    this.pos.x = hub.pos.x - 2;
+                    this.pos.y = hub.pos.y;
+                    this.angle = 0;
                     this.state = PlugStateConnected;
                 }
             } break;
@@ -82,8 +85,11 @@ class Plug
         ctx.translate(this.pos.x, this.pos.y);
         ctx.rotate(this.angle * Deg2Rad);
         DrawRect(0, 0, 16, 16, "#444");
-        DrawRect(8, -3, 10, 2, "#444");
-        DrawRect(8, 3, 10, 2, "#444");
+        if (this.state != PlugStateConnected)
+        {
+            DrawRect(8, -3, 10, 2, "#444");
+            DrawRect(8, 3, 10, 2, "#444");
+        }
         ctx.restore();
     }
 }
