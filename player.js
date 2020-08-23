@@ -1,7 +1,7 @@
 let PlayerStateIdle = 0;
 let PlayerStateBelly = 1;
 
-let BellyBounceTime = 30;
+let BellyBounceTime = 45;
 let BellyBounceAttackTime = 10;
 
 class Player
@@ -69,6 +69,7 @@ class Player
 
     OnBounce(enemy)
     {
+        this.timer = 15;
         this.hitConfirm = true;
     }
 

@@ -49,11 +49,17 @@ class Enemy
 
     MoveToPlayer()
     {
+        this.pos.AddV(this.vel);
     }
 
     BounceOff()
     {
         this.vel.Set(4 + Math.random()*2.0, -5 - Math.random()*2.0);
+        if (Math.random() < 0.2)
+        {
+            this.vel.x = -this.vel.x;
+            this.vel.y *= 2;
+        }
         this.state = EnemyStateBounceOff;
         player.OnBounce(this);
     }

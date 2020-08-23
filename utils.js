@@ -1,6 +1,8 @@
 enemyFuncs = []
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowRun())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_FastRun())}});
+enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowBounce())}});
+enemyFuncs.push({prob:100, func:()=>{objs.push(new Enemy_DelayedAttack())}});
 
 let enemyFuncsTotalProb = 0;
 enemyFuncs.forEach(ef => enemyFuncsTotalProb += ef.prob);
