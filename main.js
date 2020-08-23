@@ -2,7 +2,8 @@ let player = new Player();
 
 let objs = [];
 objs.push(player);
-objs.push(new Enemy());
+
+setInterval(() => CreateEnemy(), 2000);
 
 GameState = (reason) =>
 {
@@ -17,8 +18,8 @@ nextState = GameState;
 window.addEventListener("keydown", e =>
 {
     let keyName = e.key.toLowerCase();
-    if (keyName == "r")
+    if (keyName == "e")
     {
-        //plug.Reset();
+        CreateEnemy();
     }
 });

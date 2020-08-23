@@ -9,6 +9,7 @@ class Enemy
         this.vel = new V2(0, 0);
         this.state = EnemyStateMoveToPlayer;
         this.angle = 0;
+        this.color = "000";
     }
 
     Tick()
@@ -48,13 +49,13 @@ class Enemy
 
     MoveToPlayer()
     {
-        this.pos.x -= 3;
     }
 
     BounceOff()
     {
         this.vel.Set(4 + Math.random()*2.0, -5 - Math.random()*2.0);
         this.state = EnemyStateBounceOff;
+        player.OnBounce(this);
     }
 
     KillSelf()
@@ -66,13 +67,13 @@ class Enemy
             objs.splice(idx, 1);
         }
 
-        objs.push(new Enemy());
+        //CreateEnemy();
     }
 
     Draw()
     {
         PushMatrix(this.pos.x, this.pos.y, this.angle);
-        DrawRect(0, 0, 32, 32, "#F00");
+        DrawRect(0, 0, 32, 32, this.color);
         PopMatrix();
     }
 }

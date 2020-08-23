@@ -14,9 +14,6 @@ class Player
     Reset()
     {
         this.Idle();
-        this.angle = 0;
-        this.state = PlayerStateIdle;
-        this.timer = 0;
     }
 
     Tick()
@@ -38,6 +35,12 @@ class Player
                 {
                     this.Idle();
                 }
+
+                if (touch.down && this.hitConfirm)
+                {
+                    // re-animate belly bounce here...
+                    this.BellyBounce();
+                }
             } break;
         }
     }
@@ -46,6 +49,8 @@ class Player
     {
         this.pos = new V2(100, 140);
         this.angle = 0;
+        this.timer = 0;
+        this.hitConfirm = false;
         this.state = PlayerStateIdle;
     }
 
@@ -60,6 +65,11 @@ class Player
     IsBellyBounceAttacking()
     {
         return (this.state == PlayerStateBelly) && (this.timer >= BellyBounceTime - BellyBounceAttackTime);
+    }
+
+    OnBounce(enemy)
+    {
+        this.hitConfirm = true;
     }
 
     Draw()
