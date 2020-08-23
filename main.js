@@ -1,8 +1,8 @@
-let plug = new Plug();
-let hub = new Hub();
+let player = new Player();
+
 let objs = [];
-objs.push(hub);
-objs.push(plug);
+objs.push(player);
+objs.push(new Enemy());
 
 GameState = (reason) =>
 {
@@ -19,6 +19,6 @@ window.addEventListener("keydown", e =>
     let keyName = e.key.toLowerCase();
     if (keyName == "r")
     {
-        plug.Reset();
+        //plug.Reset();
     }
 });

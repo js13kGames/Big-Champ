@@ -31,6 +31,18 @@ canvas.addEventListener("touchmove", e => { SetTouchPos(e.touches[0]); e.prevent
 SetTouchPos = (e) => { touch.x = (e.pageX - canvas.offsetLeft) / gameScale; touch.y = (e.pageY - canvas.offsetTop) / gameScale; }
 
 // Rendering ------------------------------------------------------------------
+PushMatrix = (x, y, angle = 0) =>
+{
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle * Deg2Rad);
+}
+
+PopMatrix = () =>
+{
+    ctx.restore();
+}
+
 LoadSprite = (name) =>
 {
     sprite = new Image();

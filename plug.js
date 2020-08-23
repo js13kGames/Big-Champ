@@ -32,7 +32,7 @@ class Plug
                 if (touch.up)
                 {
                     this.vel.SetToFrom(touch, this.dragOrig) * 1.5;
-                    this.vel.ClampMax(10);
+                    this.vel.ClampMax(5);
                     this.state = PlugStateThrowing;
                 }
             } break;
@@ -40,7 +40,7 @@ class Plug
             case PlugStateThrowing:
             {
                 this.pos.AddV(this.vel);
-                this.vel.y += 0.25;
+                //this.vel.y += 0.25;
 
                 // Bounce/friction?
                 if (this.pos.x < 0 || this.pos.x > gameWidth)
