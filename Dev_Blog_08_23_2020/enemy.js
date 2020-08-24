@@ -28,7 +28,6 @@ class Enemy
                     }
                     else
                     {
-                        player.OnHit(this);
                         this.KillSelf();
                     }
                 }

@@ -44,7 +44,7 @@ class Enemy_DelayedAttack extends Enemy
                 {
                     this.subState = 2;
                     this.pos.y = 148;
-                    this.vel.x = -10;
+                    this.vel.x = -8;
                 }
             } break;
 

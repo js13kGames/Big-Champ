@@ -14,8 +14,6 @@ class Player
     Reset()
     {
         this.Idle();
-        this.health = 3;
-        this.score = 0;
     }
 
     Tick()
@@ -73,16 +71,6 @@ class Player
     {
         this.timer = 15;
         this.hitConfirm = true;
-        this.score++;
-    }
-
-    OnHit(enemy)
-    {
-        this.health--;
-        if (this.health == 0)
-        {
-            nextState = GameOver;
-        }
     }
 
     Draw()

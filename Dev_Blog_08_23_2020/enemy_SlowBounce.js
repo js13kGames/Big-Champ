@@ -4,8 +4,7 @@ class Enemy_SlowBounce extends Enemy
     {
         super();
         this.color = "#00F";
-        this.pos.Set(this.pos.x + 70, this.pos.y);
-        this.vel.Set(-5, -8);
+        this.vel.Set(-4, -8);
     }
 
     MoveToPlayer()
