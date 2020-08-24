@@ -2,7 +2,7 @@ let PlayerStateIdle = 0;
 let PlayerStateBelly = 1;
 
 let BellyBounceTime = 45;
-let BellyBounceAttackTime = 10;
+let BellyBounceAttackTime = 8;
 
 class Player
 {
@@ -78,6 +78,7 @@ class Player
 
     OnHit(enemy)
     {
+        this.timer = 15;
         this.health--;
         if (this.health == 0)
         {
