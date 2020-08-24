@@ -3,6 +3,7 @@ enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowRun())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_FastRun())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowBounce())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_DelayedAttack())}});
+enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_LongJump())}});
 
 let enemyFuncsTotalProb = 0;
 enemyFuncs.forEach(ef => enemyFuncsTotalProb += ef.prob);
@@ -16,7 +17,7 @@ CreateEnemy = () =>
         curProb += enemyFuncs[i].prob / enemyFuncsTotalProb;
         if (desiredProb <= curProb)
         {
-            let count = 1;//Math.floor(Math.random()*2.99) + 1;
+            let count = Math.random() < 0.25 ? 2 : 1;//Math.floor(Math.random()*2.99) + 1;
             for (let c = 0; c < count; ++c)
             {
                 setTimeout(enemyFuncs[i].func, (250 + Math.random()*250)*c);
