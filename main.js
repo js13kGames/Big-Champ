@@ -67,7 +67,7 @@ DrawHud = (reason) =>
 }
 
 // Start initial state
-nextState = MainMenu;
+nextState = GameState;//MainMenu;
 
 // DEBUG
 window.addEventListener("keydown", e =>
