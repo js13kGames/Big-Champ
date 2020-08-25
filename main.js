@@ -16,7 +16,7 @@ MainMenu = (reason) =>
     objs.forEach(o => o.Tick());
     objs.forEach(o => o.Draw());
 
-    DrawText("Menu", gameWidth*0.5, gameHeight*0.5, 36, "#000", 0, "Arial", "Bold", "center", "center");
+    DrawText("Menu", gameWidth*0.5, gameHeight*0.5, 72, "#000", 0, "Arial", "Bold", "center", "center");
 }
 
 GameState = (reason) =>
@@ -26,6 +26,8 @@ GameState = (reason) =>
         player.Reset();
         enemyTimer = setInterval(() => CreateEnemy(), 1500);
     }
+
+    DrawBackground();
 
     objs.forEach(o => o.Tick());
     objs.forEach(o => o.Draw());
@@ -52,7 +54,7 @@ GameOver = (reason) =>
 
     DrawHud();
 
-    DrawText("Game Over", gameWidth*0.5, gameHeight*0.5, 36, "#000", 0, "Arial", "Bold", "center", "center");
+    DrawText("Game Over", gameWidth*0.5, gameHeight*0.5, 72, "#000", 0, "Arial", "Bold", "center", "center");
 }
 
 // UI
@@ -60,10 +62,10 @@ DrawHud = (reason) =>
 {
     for (let i = 0; i < 3; ++i)
     {
-        DrawRect(20 + (20*i), 20, 10, 10, player.health > i ? "#F00" : "#444");
+        DrawRect(40 + (40*i), 40, 20, 20, player.health > i ? "#F00" : "#444");
     }
 
-    DrawText(player.score.toString(), gameWidth - 20, 25, 20, "#000", 0, "Arial", "Bold", "right", "center");
+    DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#000", 0, "Arial", "Bold", "right", "center");
 }
 
 // Start initial state

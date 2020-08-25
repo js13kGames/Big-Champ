@@ -49,7 +49,7 @@ class Player
 
     Idle()
     {
-        this.pos = new V2(100, 140);
+        this.pos = new V2(200, 280);
         this.angle = 0;
         this.timer = 0;
         this.hitConfirm = false;
@@ -58,7 +58,7 @@ class Player
 
     BellyBounce()
     {
-        this.pos = new V2(120, 130);
+        this.pos = new V2(240, 260);
         this.angle = -15;
         this.timer = BellyBounceTime;
         this.state = PlayerStateBelly;
@@ -101,45 +101,45 @@ class Player
         let mouthColor = "#500";
 
         // Left leg
-        DrawRect(23, 35, 20, 30, skinColor);
-        DrawRect(23, 40, 20, 20, bootColor);
+        DrawRect(46, 70, 40, 60, skinColor);
+        DrawRect(46, 80, 40, 40, bootColor);
 
         // Body
-        DrawCircle(0, 0, 40, skinColor, Math.PI, Math.PI*2);
+        DrawCircle(0, 0, 80, skinColor, Math.PI, Math.PI*2);
 
         // Nipples
-        DrawCircle(12, -5, 3, outlineColor);
-        DrawCircle(-2, -5, 3, outlineColor);
+        DrawCircle(24, -10, 6, outlineColor);
+        DrawCircle(-4, -10, 6, outlineColor);
 
         // Head
-        DrawRect(-5, -45, 35, 35, skinColor);
+        DrawRect(-10, -90, 70, 70, skinColor);
 
         // Shoulder strap
-        DrawBezierLine(-23, -29, -10, 10, -5, -10, -5, 10, outfitColor, 10);
+        DrawBezierLine(-46, -58, -20, 20, -10, -20, -10, 20, outfitColor, 20);
 
         // Armpit shadow
-        DrawCircle(-16, -4.5, 14, outlineColor);
+        DrawCircle(-32, -9, 28, outlineColor);
 
         // Outfit bottom
-        DrawCircle(0, 0, 40, outfitColor, 0, Math.PI);
+        DrawCircle(0, 0, 80, outfitColor, 0, Math.PI);
 
         // Right leg
-        DrawCircle(-10, 12, 10, skinColor);
-        DrawRect(-20, 35, 20, 30, skinColor);
-        DrawRect(-20, 40, 20, 20, bootColor);
+        DrawCircle(-20, 24, 20, skinColor);
+        DrawRect(-40, 70, 40, 60, skinColor);
+        DrawRect(-40, 80, 40, 40, bootColor);
 
         // Right arm
-        DrawCircle(-17, -5, 14, skinColor);
-        DrawCircle(-20, 3, 10, skinColor);
+        DrawCircle(-34, -10, 28, skinColor);
+        DrawCircle(-40, 6, 20, skinColor);
 
         // Eyes
-        DrawRect(-3, -45, 6, 10, eyeColor);
-        DrawRect(6, -45, 6, 10, eyeColor);
-        DrawRect(-2, -43, 3, 5, pupilColor);
-        DrawRect(7, -43, 3, 5, pupilColor);
+        DrawRect(-6, -90, 12, 20, eyeColor);
+        DrawRect(12, -90, 12, 20, eyeColor);
+        DrawRect(-4, -86, 8, 12, pupilColor);
+        DrawRect(14, -86, 8, 12, pupilColor);
 
         // Mouth
-        DrawRect(0, -35, 20, 2, mouthColor);
+        DrawRect(0, -70, 40, 4, mouthColor);
 
         PopMatrix();
     }
