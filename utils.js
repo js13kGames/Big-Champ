@@ -29,13 +29,44 @@ CreateEnemy = () =>
 
 DrawBackground = () =>
 {
-    return;
+    let ropeWidth = 15;
+
+    PushMatrix(0, -player.bellyOffset.y*0.25, 0);
+
+    // Blue ropes
+    DrawLine(100, 280, 810, 280, "#3A50BD", ropeWidth);
+    DrawLine(100, 280, -10, 460, "#3A50BD", ropeWidth);
+
+    // White ropes
+    DrawLine(100, 240, 810, 240, "#EDF7F7", ropeWidth);
+    DrawLine(100, 240, -10, 420, "#EDF7F7", ropeWidth);
+
+    // Red ropes
+    DrawLine(100, 200, 810, 200, "#CE3B2F", ropeWidth);
+    DrawLine(100, 200, -10, 380, "#CE3B2F", ropeWidth);
+
+    // Turnbuckle
+    DrawLine(110, 190, 110, 315, "#111", 30.0);
+
+    // Outline around gray mat
     ctx.beginPath();
-    ctx.moveTo(30, 100);
-    ctx.lineTo(30, 150);
-    ctx.lineTo(300, 300);
-    ctx.lineTo(300, 300);
+    ctx.moveTo(95, 315);
+    ctx.lineTo(15, 450);
+    ctx.lineTo(810, 450);
+    ctx.lineTo(810, 315);
+    ctx.closePath();
+    ctx.fillStyle = "#83839E";
+    ctx.fill();
+
+    // Gray mat
+    ctx.beginPath();
+    ctx.moveTo(100, 320);
+    ctx.lineTo(25, 450);
+    ctx.lineTo(810, 450);
+    ctx.lineTo(810, 320);
     ctx.closePath();
     ctx.fillStyle = "#BFBEE5";
     ctx.fill();
+
+    PopMatrix();
 }
