@@ -20,7 +20,7 @@ class Enemy
             {
                 this.MoveToPlayer();
 
-                if (this.pos.x <= player.pos.x + 30)
+                if (this.pos.x <= player.pos.x + 70)
                 {
                     if (player.IsBellyBounceAttacking())
                     {

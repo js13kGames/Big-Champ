@@ -16,6 +16,9 @@ class Player
         this.Idle();
         this.health = 3;
         this.score = 0;
+        this.bellyOffset = new V2(0, 0);
+        this.bellyOffset.xLast = 0;
+        this.bellyOffset.yLast = 0;
     }
 
     Tick()
@@ -45,6 +48,8 @@ class Player
                 }
             } break;
         }
+
+        this.UpdateBellyPhysics();
     }
 
     Idle()
@@ -58,8 +63,8 @@ class Player
 
     BellyBounce()
     {
-        //this.pos = new V2(240, 260);
-        //this.angle = -15;
+        this.bellyOffset.x = 5;
+        this.bellyOffset.y = 10;
         this.timer = BellyBounceTime;
         this.state = PlayerStateBelly;
     }
@@ -83,6 +88,28 @@ class Player
         if (this.health == 0)
         {
             nextState = GameOver;
+        }
+    }
+
+    UpdateBellyPhysics()
+    {
+        // Simulate
+        let vx = (this.bellyOffset.x - this.bellyOffset.xLast);
+        let vy = (this.bellyOffset.y - this.bellyOffset.yLast);
+        this.bellyOffset.xLast = this.bellyOffset.x;
+        this.bellyOffset.yLast = this.bellyOffset.y;
+        this.bellyOffset.x += vx;
+        this.bellyOffset.y += vy;
+
+        // Constrain
+        let d = this.bellyOffset.Len();
+        if (d > 0)
+        {
+            let restLength = 0;
+            let springRatio = 0.2;
+            let moveMul = (d - restLength) / d;
+            let move = new V2(this.bellyOffset.x*moveMul*springRatio, this.bellyOffset.y*moveMul*springRatio);
+            this.bellyOffset.SubV(move);
         }
     }
 
@@ -129,7 +156,7 @@ class Player
 
     DrawLeg(x, y, angle)
     {
-        PushMatrix(x, y, angle);
+        PushMatrix(x + this.bellyOffset.x*0.5, y + this.bellyOffset.y*0.5, angle);
         DrawCircle(-10, 8, 20, this.skinColor);     // Rounded top of leg
         DrawRect(-20, 46, 40, 60, this.skinColor);  // Leg
         DrawRect(-20, 56, 42, 42, this.bootColor);  // Boot
@@ -141,8 +168,8 @@ class Player
 
     DrawBody(x, y, angle)
     {
-        PushMatrix(x, y, angle);
-        DrawCircle(0, 0, 80, this.skinColor, Math.PI, Math.PI*2);   // Torso
+        PushMatrix(x + this.bellyOffset.x, y + this.bellyOffset.y, angle);
+        DrawCircle(0, 0, 80 + this.bellyOffset.x*1, this.skinColor, Math.PI, Math.PI*2);   // Torso
         DrawCircle(24, -10, 6, this.outlineColor);  // Right nipple
         DrawCircle(-4, -10, 6, this.outlineColor);  // Left nipple
         PopMatrix();
@@ -150,16 +177,16 @@ class Player
 
     DrawOutfit(x, y, angle)
     {
-        PushMatrix(x, y, angle);
+        PushMatrix(x + this.bellyOffset.x, y + this.bellyOffset.y, angle);
         DrawBezierLine(-46, -58, -20, 20, -10, -20, -10, 20, this.outfitColor, 20); // Shoulder strap
         DrawCircle(-32, -9, 28, this.outlineColor); // Armpit shadow
-        DrawCircle(0, 0, 80, this.outfitColor, 0, Math.PI); // Outfit bottom
+        DrawCircle(0, 0, 80 + this.bellyOffset.x*1, this.outfitColor, 0, Math.PI); // Outfit bottom
         PopMatrix();
     }
 
     DrawArm(x, y, angle)
     {
-        PushMatrix(x, y, angle);
+        PushMatrix(x + this.bellyOffset.x*0.5, y + this.bellyOffset.y*0.5, angle);
         DrawCircle(0, 0, 28, this.skinColor);   // Upper
         DrawCircle(-6, 16, 20, this.skinColor); // Lower
         PopMatrix(x, y, angle);
@@ -167,7 +194,7 @@ class Player
 
     DrawHead(x, y, angle)
     {
-        PushMatrix(x, y, angle);
+        PushMatrix(x + this.bellyOffset.x*0.5, y + this.bellyOffset.y*0.5, angle);
 
         DrawRect(0, 0, 70, 70, this.skinColor); // Head
 
