@@ -26,3 +26,16 @@ CreateEnemy = () =>
         }
     }
 }
+
+DrawBackground = () =>
+{
+    return;
+    ctx.beginPath();
+    ctx.moveTo(30, 100);
+    ctx.lineTo(30, 150);
+    ctx.lineTo(300, 300);
+    ctx.lineTo(300, 300);
+    ctx.closePath();
+    ctx.fillStyle = "#BFBEE5";
+    ctx.fill();
+}

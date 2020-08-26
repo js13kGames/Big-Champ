@@ -5,7 +5,7 @@ class Enemy
 {
     constructor()
     {
-        this.pos = new V2(840, 296);
+        this.pos = new V2(420, 148);
         this.vel = new V2(0, 0);
         this.state = EnemyStateMoveToPlayer;
         this.angle = 0;
@@ -20,7 +20,7 @@ class Enemy
             {
                 this.MoveToPlayer();
 
-                if (this.pos.x <= player.pos.x + 30)
+                if (this.pos.x <= player.pos.x + 10)
                 {
                     if (player.IsBellyBounceAttacking())
                     {
@@ -37,7 +37,7 @@ class Enemy
             case EnemyStateBounceOff:
             {
                 this.pos.AddV(this.vel);
-                this.vel.y += 0.8;
+                this.vel.y += 0.4;
                 this.angle += 5 + Math.random()*5;
 
                 if (this.pos.y > gameHeight)
@@ -55,7 +55,7 @@ class Enemy
 
     BounceOff()
     {
-        this.vel.Set(8 + Math.random()*4.0, -10 - Math.random()*4.0);
+        this.vel.Set(4 + Math.random()*2.0, -5 - Math.random()*2.0);
         if (Math.random() < 0.2)
         {
             this.vel.x = -this.vel.x;
@@ -80,7 +80,7 @@ class Enemy
     Draw()
     {
         PushMatrix(this.pos.x, this.pos.y, this.angle);
-        DrawRect(0, 0, 64, 64, this.color);
+        DrawRect(0, 0, 32, 32, this.color);
         PopMatrix();
     }
 }

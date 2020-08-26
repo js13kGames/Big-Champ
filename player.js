@@ -58,8 +58,8 @@ class Player
 
     BellyBounce()
     {
-        this.pos = new V2(240, 260);
-        this.angle = -15;
+        //this.pos = new V2(240, 260);
+        //this.angle = -15;
         this.timer = BellyBounceTime;
         this.state = PlayerStateBelly;
     }
@@ -92,54 +92,105 @@ class Player
 
         // What follows is the DUMBEST way to draw the player...
 
-        let skinColor = "#DC774F";
-        let outlineColor = "#A3583A";
-        let bootColor = "#111";
-        let outfitColor = "#111";
-        let eyeColor = "#FFF";
-        let pupilColor = "#000";
-        let mouthColor = "#500";
+        this.skinColor = "#DC774F";
+        this.outlineColor = "#A3583A";
+        this.bootColor = "#111";
+        this.outfitColor = "#111";
+        this.eyeColor = "#FFF";
+        this.pupilColor = "#000";
+        this.mouthColor = "#500";
+        this.lacesColor = "#FFF";
 
-        // Left leg
-        DrawRect(46, 70, 40, 60, skinColor);
-        DrawRect(46, 80, 40, 40, bootColor);
+        switch (this.state)
+        {
+            case PlayerStateIdle:
+            {
+                this.DrawLeg(66, 24, 0);        // Left leg
+                this.DrawBody(0, 0, 0);         // Body
+                this.DrawHead(-10, -90, 0);     // Head
+                this.DrawOutfit(0, 0, 0);       // Outfit
+                this.DrawLeg(-20, 24, 0);       // Right leg
+                this.DrawArm(-68, -20, 0);      // Arm
+            } break;
 
-        // Body
-        DrawCircle(0, 0, 80, skinColor, Math.PI, Math.PI*2);
+            case PlayerStateBelly:
+            {
+                this.DrawLeg(90, 35, 30);        // Left leg
+                this.DrawBody(40, -20, -15);         // Body
+                this.DrawHead(-5, -100, -40);     // Head
+                this.DrawOutfit(40, -20, -15);       // Outfit
+                this.DrawLeg(25, 35, 30);       // Right leg
+                this.DrawArm(-30, -22, 10);      // Arm
+            } break;
+        }
 
-        // Nipples
-        DrawCircle(24, -10, 6, outlineColor);
-        DrawCircle(-4, -10, 6, outlineColor);
+        PopMatrix();
+    }
 
-        // Head
-        DrawRect(-10, -90, 70, 70, skinColor);
+    DrawLeg(x, y, angle)
+    {
+        PushMatrix(x, y, angle);
+        DrawCircle(-10, 8, 20, this.skinColor);     // Rounded top of leg
+        DrawRect(-20, 46, 40, 60, this.skinColor);  // Leg
+        DrawRect(-20, 56, 42, 42, this.bootColor);  // Boot
+        DrawRect(-10, 45, 14, 4, this.lacesColor);  // Top lace
+        DrawRect(-10, 55, 14, 4, this.lacesColor);  // Middle lace
+        DrawRect(-10, 65, 14, 4, this.lacesColor);  // Bottom lace
+        PopMatrix();
+    }
 
-        // Shoulder strap
-        DrawBezierLine(-46, -58, -20, 20, -10, -20, -10, 20, outfitColor, 20);
+    DrawBody(x, y, angle)
+    {
+        PushMatrix(x, y, angle);
+        DrawCircle(0, 0, 80, this.skinColor, Math.PI, Math.PI*2);   // Torso
+        DrawCircle(24, -10, 6, this.outlineColor);  // Right nipple
+        DrawCircle(-4, -10, 6, this.outlineColor);  // Left nipple
+        PopMatrix();
+    }
 
-        // Armpit shadow
-        DrawCircle(-32, -9, 28, outlineColor);
+    DrawOutfit(x, y, angle)
+    {
+        PushMatrix(x, y, angle);
+        DrawBezierLine(-46, -58, -20, 20, -10, -20, -10, 20, this.outfitColor, 20); // Shoulder strap
+        DrawCircle(-32, -9, 28, this.outlineColor); // Armpit shadow
+        DrawCircle(0, 0, 80, this.outfitColor, 0, Math.PI); // Outfit bottom
+        PopMatrix();
+    }
 
-        // Outfit bottom
-        DrawCircle(0, 0, 80, outfitColor, 0, Math.PI);
+    DrawArm(x, y, angle)
+    {
+        PushMatrix(x, y, angle);
+        DrawCircle(0, 0, 28, this.skinColor);   // Upper
+        DrawCircle(-6, 16, 20, this.skinColor); // Lower
+        PopMatrix(x, y, angle);
+    }
 
-        // Right leg
-        DrawCircle(-20, 24, 20, skinColor);
-        DrawRect(-40, 70, 40, 60, skinColor);
-        DrawRect(-40, 80, 40, 40, bootColor);
+    DrawHead(x, y, angle)
+    {
+        PushMatrix(x, y, angle);
 
-        // Right arm
-        DrawCircle(-34, -10, 28, skinColor);
-        DrawCircle(-40, 6, 20, skinColor);
+        DrawRect(0, 0, 70, 70, this.skinColor); // Head
 
-        // Eyes
-        DrawRect(-6, -90, 12, 20, eyeColor);
-        DrawRect(12, -90, 12, 20, eyeColor);
-        DrawRect(-4, -86, 8, 12, pupilColor);
-        DrawRect(14, -86, 8, 12, pupilColor);
+        switch (this.state)
+        {
+            case PlayerStateIdle:
+            {
+                DrawRect(4, 0, 12, 20, this.eyeColor);   // Left eye
+                DrawRect(22, 0, 12, 20, this.eyeColor);   // Right eye
+                DrawRect(6, 4, 8, 12, this.pupilColor);  // Left pupil
+                DrawRect(24, 4, 8, 12, this.pupilColor);  // Right pupil
+                DrawRect(10, 20, 40, 4, this.mouthColor);   // Mouth
+            } break;
 
-        // Mouth
-        DrawRect(0, -70, 40, 4, mouthColor);
+            case PlayerStateBelly:
+            {
+                DrawRect(4, 0, 12, 20, this.eyeColor);   // Left eye
+                DrawRect(22, 0, 12, 20, this.eyeColor);   // Right eye
+                DrawRect(5, 4, 10, 12, this.pupilColor);  // Left pupil
+                DrawRect(23, 4, 10, 12, this.pupilColor);  // Right pupil
+                DrawRect(10, 20, 40, 10, this.mouthColor);   // Mouth
+            } break;
+        }
 
         PopMatrix();
     }

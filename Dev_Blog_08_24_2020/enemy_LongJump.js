@@ -4,21 +4,21 @@ class Enemy_LongJump extends Enemy
     {
         super();
         this.color = "#FF0";
-        this.pos.Set(this.pos.x + 80, this.pos.y);
-        this.vel.Set(-20, -20);
+        this.pos.Set(this.pos.x + 40, this.pos.y);
+        this.vel.Set(-10, -10);
         this.angle = -10;
     }
 
     MoveToPlayer()
     {
-        this.vel.y += 1.0;
+        this.vel.y += 0.5;
 
         super.MoveToPlayer();
 
-        if (this.pos.y >= 296)
+        if (this.pos.y >= 148)
         {
-            this.pos.y = 296;
-            this.vel.y = -18;
+            this.pos.y = 148;
+            this.vel.y = -9;
         }
     }
 }

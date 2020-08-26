@@ -1,7 +1,7 @@
 // Config ---------------------------------------------------------------------
-gameWidth = 800;
-gameHeight = 450;
-gameScale = 1.0;
+gameWidth = 400;
+gameHeight = 225;
+gameScale = 2.0;
 
 // Constants ------------------------------------------------------------------
 Deg2Rad = Math.PI/180.0;
@@ -55,23 +55,9 @@ DrawLine = (x1, y1, x2, y2, color, width = 1.0) =>
     ctx.save();
     ctx.strokeStyle = color;
     ctx.lineWidth = width;
-    ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
-    ctx.stroke();
-    ctx.restore();
-}
-
-DrawBezierLine = (x1, y1, x2, y2, c1x, c1y, c2x, c2y, color, width) =>
-{
-    ctx.save();
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.bezierCurveTo(c1x, c1y, c2x, c2y, x2, y2);
     ctx.stroke();
     ctx.restore();
 }
@@ -82,7 +68,7 @@ DrawRect = (x, y, width, height, color, angle = 0.0) =>
     let hh = height * 0.5;
 
     ctx.save();
-    ctx.translate(x + 0.5, y + 0.5);
+    ctx.translate(x, y);
     ctx.rotate(angle * Deg2Rad);
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -91,17 +77,6 @@ DrawRect = (x, y, width, height, color, angle = 0.0) =>
     ctx.lineTo(hw, hh);
     ctx.lineTo(-hw, hh);
     ctx.lineTo(-hw, -hh);
-    ctx.fill();
-    ctx.restore();
-}
-
-DrawCircle = (x, y, radius, color, startAngle = 0, endAngle = 2*Math.PI) =>
-{
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, startAngle, endAngle);
     ctx.fill();
     ctx.restore();
 }
