@@ -51,8 +51,8 @@ DrawBackground = () =>
     // Outline around gray mat
     ctx.beginPath();
     ctx.moveTo(95, 315);
-    ctx.lineTo(15, 450);
-    ctx.lineTo(810, 450);
+    ctx.lineTo(15, 460);
+    ctx.lineTo(810, 460);
     ctx.lineTo(810, 315);
     ctx.closePath();
     ctx.fillStyle = "#83839E";
@@ -61,8 +61,8 @@ DrawBackground = () =>
     // Gray mat
     ctx.beginPath();
     ctx.moveTo(100, 320);
-    ctx.lineTo(25, 450);
-    ctx.lineTo(810, 450);
+    ctx.lineTo(25, 460);
+    ctx.lineTo(810, 460);
     ctx.lineTo(810, 320);
     ctx.closePath();
     ctx.fillStyle = "#BFBEE5";
