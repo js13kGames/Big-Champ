@@ -35,15 +35,15 @@ DrawBackground = () =>
 
     // Blue ropes
     DrawLine(100, 280, 810, 280, "#3A50BD", ropeWidth);
-    DrawLine(100, 280, -10, 460, "#3A50BD", ropeWidth);
+    DrawLine(100, 280, -10, 460, "#3A50BD", ropeWidth*0.9);
 
     // White ropes
     DrawLine(100, 240, 810, 240, "#EDF7F7", ropeWidth);
-    DrawLine(100, 240, -10, 420, "#EDF7F7", ropeWidth);
+    DrawLine(100, 240, -10, 405, "#EDF7F7", ropeWidth*0.9);
 
     // Red ropes
     DrawLine(100, 200, 810, 200, "#CE3B2F", ropeWidth);
-    DrawLine(100, 200, -10, 380, "#CE3B2F", ropeWidth);
+    DrawLine(100, 200, -10, 355, "#CE3B2F", ropeWidth*0.9);
 
     // Turnbuckle
     DrawLine(110, 190, 110, 315, "#111", 30.0);
