@@ -18,7 +18,7 @@ CreateEnemy = () =>
         if (desiredProb <= curProb)
         {
             let count = Math.random() < 0.25 ? 2 : 1;//Math.floor(Math.random()*2.99) + 1;
-            for (let c = 0; c < count; ++c)
+            //for (let c = 0; c < count; ++c)
             {
                 //setTimeout(enemyFuncs[i].func, (250 + Math.random()*250)*c);
                 enemyFuncs[i].func();
