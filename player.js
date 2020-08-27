@@ -179,7 +179,7 @@ class Player
     {
         PushMatrix(x + this.bellyOffset.x, y + this.bellyOffset.y, angle);
         DrawBezierLine(-46, -58, -20, 20, -10, -20, -10, 20, this.outfitColor, 20); // Shoulder strap
-        DrawCircle(-32, -9, 28, this.outlineColor); // Armpit shadow
+        DrawCircle(-32, -9,28, this.outlineColor); // Armpit shadow
         DrawCircle(0, 0, 80 + this.bellyOffset.x*1, this.outfitColor, 0, Math.PI); // Outfit bottom
         PopMatrix();
     }
@@ -189,7 +189,7 @@ class Player
         PushMatrix(x + this.bellyOffset.x*0.5, y + this.bellyOffset.y*0.5, angle);
         DrawCircle(0, 0, 28, this.skinColor);   // Upper
         DrawCircle(-6, 16, 20, this.skinColor); // Lower
-        PopMatrix(x, y, angle);
+        PopMatrix();
     }
 
     DrawHead(x, y, angle)

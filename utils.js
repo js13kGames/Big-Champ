@@ -20,7 +20,8 @@ CreateEnemy = () =>
             let count = Math.random() < 0.25 ? 2 : 1;//Math.floor(Math.random()*2.99) + 1;
             for (let c = 0; c < count; ++c)
             {
-                setTimeout(enemyFuncs[i].func, (250 + Math.random()*250)*c);
+                //setTimeout(enemyFuncs[i].func, (250 + Math.random()*250)*c);
+                enemyFuncs[i].func();
             }
             break;
         }
@@ -69,4 +70,14 @@ DrawBackground = () =>
     ctx.fill();
 
     PopMatrix();
+}
+
+DrawHud = () =>
+{
+    for (let i = 0; i < 3; ++i)
+    {
+        DrawRect(40 + (40*i), 40, 20, 20, player.health > i ? "#F00" : "#444");
+    }
+
+    DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#000", 0, "Arial", "Bold", "right", "center");
 }

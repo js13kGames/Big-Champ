@@ -108,7 +108,7 @@ DrawRect = (x, y, width, height, color, angle = 0.0) =>
 DrawCircle = (x, y, radius, color, startAngle = 0, endAngle = 2*Math.PI) =>
 {
     ctx.save();
-    ctx.translate(x, y);
+    ctx.translate(x + 0.5, y + 0.5);
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(x, y, radius, startAngle, endAngle);

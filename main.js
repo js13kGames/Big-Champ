@@ -24,7 +24,7 @@ GameState = (reason) =>
     if (reason == Enter)
     {
         player.Reset();
-        //enemyTimer = setInterval(() => CreateEnemy(), 1500);
+        enemyTimer = setInterval(() => CreateEnemy(), 1500);
     }
 
     DrawBackground();
@@ -57,19 +57,26 @@ GameOver = (reason) =>
     DrawText("Game Over", gameWidth*0.5, gameHeight*0.5, 72, "#000", 0, "Arial", "Bold", "center", "center");
 }
 
-// UI
-DrawHud = (reason) =>
+RenderTest = (reason) =>
 {
-    for (let i = 0; i < 3; ++i)
+    if (reason == Enter)
     {
-        DrawRect(40 + (40*i), 40, 20, 20, player.health > i ? "#F00" : "#444");
+        player.Reset();
+        CreateEnemy();
+        objs[1].pos.x = 600;
+        objs[1].pos.y = 300;
     }
 
-    DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#000", 0, "Arial", "Bold", "right", "center");
+    DrawBackground();
+
+    objs.forEach(o => o.Draw());
+    objs[1].Animate();
+
+    DrawHud();
 }
 
 // Start initial state
-nextState = GameState;//MainMenu;
+nextState = GameState;//RenderTest;//MainMenu;
 
 // DEBUG
 window.addEventListener("keydown", e =>
