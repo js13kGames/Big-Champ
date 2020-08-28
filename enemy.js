@@ -1,15 +1,20 @@
 let EnemyStateMoveToPlayer = 0;
 let EnemyStateBounceOff = 1;
 
-let EnemyStyleBase = 0;
+let EnemyStyleLowerShorts = 0;
+let EnemyStyleLowerPants = 1;
+
+let EnemyStyleHeadNormal = 0;
 
 let EnemyFrameIdle = 0;
 let EnemyFrameRun01 = 1;
 let EnemyFrameRun02 = 2;
 let EnemyFrameRun03 = 3;
+let EnemyFrameBounceOff = 4;
 
 let EnemyAnimIdle = { frames: [EnemyFrameIdle], counts: [1] };
 let EnemyAnimRun = { frames: [EnemyFrameRun01, EnemyFrameRun02, EnemyFrameRun03, EnemyFrameRun02], counts: [9, 9, 9, 9] };
+let EnemyAnimBounceOff = { frames: [EnemyFrameBounceOff], counts: [1] };
 
 class Enemy
 {
@@ -24,20 +29,19 @@ class Enemy
         this.damageThreshold = player.pos.x + 10;
         this.bounceOffAngleAdj = 0;
 
-        // Animation
-        this.anim = EnemyAnimRun;
-        this.curAnimFrame = 0;
-        this.curAnimFrameCount = 0;
-
         // Rendering vars
-        this.style = EnemyStyleBase;
-        this.frame = EnemyFrameRun03;
+        this.styleLower = EnemyStyleLowerShorts;
+        this.styleHead = EnemyStyleHeadNormal;
+        this.frame = EnemyFrameBounceOff;
         this.skinColor = "#DC774F";
         this.outlineColor = "#A3583A";
         this.outfitColor = "#B00";
         this.bootColor = "#B00";
         this.lacesColor = "#FFF";
         this.eyeColor = "#000";
+
+        // Animation
+        this.SetAnim(EnemyAnimRun);
     }
 
     Tick()
@@ -77,7 +81,6 @@ class Enemy
 
     Animate()
     {
-        this.frame = this.anim.frames[this.curAnimFrame];
         this.curAnimFrameCount++;
         if (this.curAnimFrameCount >= this.anim.counts[this.curAnimFrame])
         {
@@ -88,6 +91,15 @@ class Enemy
                 this.curAnimFrame = 0;
             }
         }
+
+        this.frame = this.anim.frames[this.curAnimFrame];
+    }
+
+    SetAnim(anim)
+    {
+        this.anim = anim;
+        this.curAnimFrameCount = 0;
+        this.curAnimFrame = 0;
     }
 
     MoveToPlayer()
@@ -106,6 +118,7 @@ class Enemy
             this.bounceOffAngleAdj = -this.bounceOffAngleAdj;
         }
         this.state = EnemyStateBounceOff;
+        this.SetAnim(EnemyAnimBounceOff);
         
         player.OnBounce(this);
     }
@@ -175,6 +188,19 @@ class Enemy
                 this.DrawArm(20, -25, -55);      // Arm
                 PopMatrix();
             } break;
+
+            case EnemyFrameBounceOff:
+            {
+                PushMatrix(0, 0, -5);
+                this.DrawLeg(-23, 43, 70);   // Right leg
+                this.DrawArm(-30, -25, 120);      // Arm
+                this.DrawBody(0, 0, 0);     // Body
+                this.DrawHead(-10, -60, 0); // Head
+                this.DrawOutfit(0, 0, 0);   // Outift
+                this.DrawLeg(10, 43, -70);    // Left leg
+                this.DrawArm(20, -25, -120);      // Arm
+                PopMatrix();
+            } break;
         }
         PopMatrix();
 
@@ -193,9 +219,10 @@ class Enemy
     DrawOutfit(x, y, angle)
     {
         PushMatrix(x, y, angle);
-        switch(this.style)
+        switch(this.styleLower)
         {
-            case EnemyStyleBase:
+            case EnemyStyleLowerShorts:
+            case EnemyStyleLowerPants:
             {
                 DrawRect(-5, 35, 60, 30, this.outfitColor);   // Shorts
             } break;
@@ -211,12 +238,12 @@ class Enemy
         let legColor = this.skinColor;
 
         // Use pants?
-        switch(this.style)
+        switch(this.styleLower)
         {
-            // case EnemyStyleBase:
-            // {
-            //     legColor = this.outfitColor;
-            // } break;
+            case EnemyStyleLowerPants:
+            {
+                legColor = this.outfitColor;
+            } break;
         }
 
         DrawCircle(0, 0, 13, legColor);     // Rounded top of leg
@@ -235,9 +262,9 @@ class Enemy
 
         DrawRect(0, 0, 50, 50, this.skinColor); // Head
 
-        switch(this.style)
+        switch(this.styleHead)
         {
-            case EnemyStyleBase:
+            case EnemyStyleHeadNormal:
             {
                 DrawRect(-12, 0, 9, 15, this.eyeColor);   // Left eye
                 DrawRect(5, 0, 9, 15, this.eyeColor);   // Right eye
