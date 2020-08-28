@@ -20,6 +20,9 @@ class Enemy
         this.state = EnemyStateMoveToPlayer;
         this.angle = 0;
         this.color = "000";
+        this.bounceThreshold = player.pos.x + 70;
+        this.damageThreshold = player.pos.x + 10;
+        this.bounceOffAngleAdj = 0;
 
         // Animation
         this.anim = EnemyAnimRun;
@@ -45,17 +48,14 @@ class Enemy
             {
                 this.MoveToPlayer();
 
-                if (this.pos.x <= player.pos.x + 70)
+                if (this.pos.x <= this.bounceThreshold && player.IsBellyBounceAttacking())
                 {
-                    if (player.IsBellyBounceAttacking())
-                    {
-                        this.BounceOff();
-                    }
-                    else
-                    {
-                        player.OnHit(this);
-                        this.KillSelf();
-                    }
+                    this.BounceOff();
+                }
+                else if (this.pos.x <= this.damageThreshold && !player.IsBellyBounceAttacking())
+                {
+                    //player.OnHit(this);
+                    this.KillSelf();
                 }
             } break;
 
@@ -63,7 +63,7 @@ class Enemy
             {
                 this.pos.AddV(this.vel);
                 this.vel.y += 0.8;
-                this.angle += 5 + Math.random()*5;
+                this.angle += this.bounceOffAngleAdj;
 
                 if (this.pos.y > gameHeight)
                 {
@@ -97,13 +97,16 @@ class Enemy
 
     BounceOff()
     {
-        this.vel.Set(8 + Math.random()*4.0, -10 - Math.random()*4.0);
-        if (Math.random() < 0.2)
+        this.vel.Set(7 + Math.random()*5.0, -11 - Math.random()*4.0);
+        this.bounceOffAngleAdj = 5 + Math.random()*5;
+        if (Math.random() < 0.4)
         {
             this.vel.x = -this.vel.x;
-            this.vel.y *= 2;
+            this.vel.y *= 1.5;
+            this.bounceOffAngleAdj = -this.bounceOffAngleAdj;
         }
         this.state = EnemyStateBounceOff;
+        
         player.OnBounce(this);
     }
 
@@ -174,6 +177,10 @@ class Enemy
             } break;
         }
         PopMatrix();
+
+        // DEBUG
+        DrawLine(this.bounceThreshold, 0, this.bounceThreshold, gameHeight, "#0F0");
+        DrawLine(this.damageThreshold, 0, this.damageThreshold, gameHeight, "#F00");
     }
 
     DrawBody(x, y, angle)
