@@ -15,12 +15,12 @@ class Enemy
 {
     constructor()
     {
-        this.pos = new V2(840, 296);
+        this.pos = new V2(840, 310);
         this.vel = new V2(0, 0);
         this.state = EnemyStateMoveToPlayer;
         this.angle = 0;
         this.color = "000";
-        this.bounceThreshold = player.pos.x + 70;
+        this.bounceThreshold = player.pos.x + 80;
         this.damageThreshold = player.pos.x + 10;
         this.bounceOffAngleAdj = 0;
 

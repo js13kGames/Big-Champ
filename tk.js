@@ -197,35 +197,58 @@ class V2
 // Main loop + State management -----------------------------------------------
 state = null;
 nextState = null;
-Enter = 0; Tick = 1; Exit = 2;
+Enter = 0; Tick = 1; Draw = 2; Exit = 3;
 clearColor = "#D67FFFFF";
-GameLoop = () =>
+gameLoopFixedTimeStep = 1/60;
+gameLoopFrameTimeAccum = 0;
+previousGameLoopTime = undefined;
+GameLoop = (curTime) =>
 {
     window.requestAnimationFrame(GameLoop);
 
-    // Switch states?
-    if (nextState != null)
+    let deltaTime = Math.min((curTime - (previousGameLoopTime || curTime)) / 1000.0, 0.2);  // Cap to 200ms (5fps)
+    gameLoopFrameTimeAccum += deltaTime;
+
+    let numSteps = 0;
+    while (gameLoopFrameTimeAccum > gameLoopFixedTimeStep)
     {
-        if (state != null) { state(Exit); }
-        state = nextState;
-        nextState = null;
-        if (state != null) { state(Enter); }
+        gameLoopFrameTimeAccum -= gameLoopFixedTimeStep;
+        ++numSteps;
+
+        // Switch states?
+        if (nextState != null)
+        {
+            if (state != null) { state(Exit); }
+            state = nextState;
+            nextState = null;
+            if (state != null) { state(Enter); }
+        }
+
+        // Tick state
+        if (state)
+        {
+            state(Tick);
+        }
     }
+
+    console.log(numSteps);
 
     // Clear canvas
     ctx.rect(0, 0, gameWidth, gameHeight);
     ctx.fillStyle = clearColor;
     ctx.fill();
 
-    // Run state
+    // Draw state
     if (state)
     {
-        state(Tick);
+        state(Draw);
     }
 
     // Clear per-frame input values
     touch.up = false;
     touch.down = false;
+
+    previousGameLoopTime = curTime;
 }
 
 // Start it up!
