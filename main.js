@@ -17,11 +17,12 @@ MainMenu = (reason) =>
                 nextState = GameState;
             }
 
-            objs.forEach(o => o.Tick());
+            //objs.forEach(o => o.Tick());
         } break;
 
         case Draw:
         {
+            DrawBackground();
             objs.forEach(o => o.Draw());
             DrawText("Menu", gameWidth*0.5, gameHeight*0.5, 72, "#000", 0, "Arial", "Bold", "center", "center");
         } break;
@@ -70,11 +71,12 @@ GameOver = (reason) =>
                 nextState = MainMenu;
             }
 
-            objs.forEach(o => o.Tick());
+            //objs.forEach(o => o.Tick());
         } break;
 
         case Draw:
         {
+            DrawBackground();
             objs.forEach(o => o.Draw());
             DrawHud();
             DrawText("Game Over", gameWidth*0.5, gameHeight*0.5, 72, "#000", 0, "Arial", "Bold", "center", "center");

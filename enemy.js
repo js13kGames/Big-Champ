@@ -54,7 +54,7 @@ class Enemy
                 }
                 else if (this.pos.x <= this.damageThreshold && !player.IsBellyBounceAttacking())
                 {
-                    //player.OnHit(this);
+                    player.OnHit(this);
                     this.KillSelf();
                 }
             } break;
