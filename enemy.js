@@ -98,7 +98,7 @@ class Enemy
     BounceOff()
     {
         this.vel.Set(7 + Math.random()*5.0, -11 - Math.random()*4.0);
-        this.bounceOffAngleAdj = 5 + Math.random()*5;
+        this.bounceOffAngleAdj = 4 + Math.random()*5;
         if (Math.random() < 0.4)
         {
             this.vel.x = -this.vel.x;

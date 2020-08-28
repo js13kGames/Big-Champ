@@ -209,11 +209,9 @@ GameLoop = (curTime) =>
     let deltaTime = Math.min((curTime - (previousGameLoopTime || curTime)) / 1000.0, 0.2);  // Cap to 200ms (5fps)
     gameLoopFrameTimeAccum += deltaTime;
 
-    let numSteps = 0;
     while (gameLoopFrameTimeAccum > gameLoopFixedTimeStep)
     {
         gameLoopFrameTimeAccum -= gameLoopFixedTimeStep;
-        ++numSteps;
 
         // Switch states?
         if (nextState != null)
@@ -230,8 +228,6 @@ GameLoop = (curTime) =>
             state(Tick);
         }
     }
-
-    console.log(numSteps);
 
     // Clear canvas
     ctx.rect(0, 0, gameWidth, gameHeight);
