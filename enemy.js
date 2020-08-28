@@ -179,8 +179,8 @@ class Enemy
         PopMatrix();
 
         // DEBUG
-        DrawLine(this.bounceThreshold, 0, this.bounceThreshold, gameHeight, "#0F0");
-        DrawLine(this.damageThreshold, 0, this.damageThreshold, gameHeight, "#F00");
+        //DrawLine(this.bounceThreshold, 0, this.bounceThreshold, gameHeight, "#0F0");
+        //DrawLine(this.damageThreshold, 0, this.damageThreshold, gameHeight, "#F00");
     }
 
     DrawBody(x, y, angle)

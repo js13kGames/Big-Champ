@@ -79,5 +79,5 @@ DrawHud = () =>
         DrawRect(40 + (40*i), 40, 20, 20, player.health > i ? "#F00" : "#444");
     }
 
-    DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#000", 0, "Arial", "Bold", "right", "center");
+    DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#FFF", 0, "Arial", "Bold", "right", "center", 8);
 }

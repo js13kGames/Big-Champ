@@ -128,17 +128,24 @@ DrawSprite = (image, x, y, xScale = 1.0, yScale = 1.0, angle = 0.0) =>
     ctx.restore();
 }
 
-DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName = "Arial", fontStyle = "", align = "left", baseline = "bottom") =>
+DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName = "Arial", fontStyle = "", align = "left", baseline = "bottom", outlineWidth = 0) =>
 {
-    this.ctx.save();
-    this.ctx.translate(x, y);
-    this.ctx.rotate(angle * Deg2Rad);
-    this.ctx.font = `${fontStyle} ${fontSize}px ${fontName}`;
-    this.ctx.fillStyle = fillStyle;
-    this.ctx.textAlign = align;
-    this.ctx.textBaseline = baseline;
-    this.ctx.fillText(text, 0, 0);
-    this.ctx.restore();
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle * Deg2Rad);
+    ctx.font = `${fontStyle} ${fontSize}px ${fontName}`;
+    ctx.fillStyle = fillStyle;
+    ctx.textAlign = align;
+    ctx.textBaseline = baseline;
+    if (outlineWidth > 0)
+    {
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = outlineWidth;
+        ctx.lineJoin = "round";
+        ctx.strokeText(text, 0, 0);
+    }
+    ctx.fillText(text, 0, 0);
+    ctx.restore();
 }
 
 // Audio (ZzFX: https://github.com/KilledByAPixel/ZzFX) -----------------------
@@ -198,7 +205,7 @@ class V2
 state = null;
 nextState = null;
 Enter = 0; Tick = 1; Draw = 2; Exit = 3;
-clearColor = "#D67FFFFF";
+clearColor = "#2A2A2AFF";
 gameLoopFixedTimeStep = 1/60;
 gameLoopFrameTimeAccum = 0;
 previousGameLoopTime = undefined;
