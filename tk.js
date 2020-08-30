@@ -205,7 +205,7 @@ class V2
 state = null;
 nextState = null;
 Enter = 0; Tick = 1; Draw = 2; Exit = 3;
-clearColor = "#2A2A2AFF";
+clearColor = "#1A1A1AFF";
 gameLoopFixedTimeStep = 1/60;
 gameLoopFrameTimeAccum = 0;
 previousGameLoopTime = undefined;

@@ -1,4 +1,4 @@
-enemyFuncs = []
+enemyFuncs = [];
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowRun())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_FastRun())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowBounce())}});
@@ -28,9 +28,61 @@ CreateEnemy = () =>
     }
 }
 
+crowd = [];
+crowdColors = ["#331C16", "#400101", "#2A110A", "#28251E", "#152833", "#333015", "#06280D"];
+for (let i = 0; i < 300; ++i)
+{
+    crowd.push(
+    {
+        x: Math.random()*gameWidth,
+        y: Math.random()*gameHeight*0.5,
+        col: Math.floor(Math.random() * crowdColors.length),
+        off: Math.random(),
+        spd: Math.random()*0.003
+    });
+}
+flashes = [];
+nextFlashTime = Math.floor(Math.random()*100);
+DrawCrowd = () =>
+{
+    crowd.forEach(c =>
+    {
+        DrawRect(c.x, c.y + Math.abs(Math.sin(Date.now()*(0.001+c.spd) + c.off)*3), 10, 10, crowdColors[c.col]);
+    });
+
+    for (let i = 0; i < flashes.length; ++i)
+    {
+        let f = flashes[i];
+        let a = "F";
+        if (f.t < 2) { a = "4"; }
+        else if (f.t < 5) { a = "8"; }
+        else if (f.t < 10) { a = "A"; }
+        DrawRect(f.x, f.y, 25, 25, "#FFF" + a);
+        f.t--;
+        if (f.t <= 0)
+        {
+            flashes.splice(i, 1);
+        }
+    }
+
+    // Start new flashes
+    nextFlashTime--;
+    if (nextFlashTime <= 0)
+    {
+        nextFlashTime = Math.floor(Math.random()*50);
+        flashes.push({x: Math.random()*gameWidth, y: Math.random()*gameHeight*0.3, t: 15});
+    }
+}
+
 DrawBackground = () =>
 {
     let ropeWidth = 15;
+
+    // Crowd
+    DrawCrowd();
+
+    // Stadium wall
+    DrawRect(gameWidth*0.5, gameHeight*0.5, gameWidth, 100, "#383838");
 
     PushMatrix(0, -player.bellyOffset.y*0.25, 0);
 
@@ -76,6 +128,7 @@ DrawHud = () =>
 {
     for (let i = 0; i < 3; ++i)
     {
+        DrawRect(40 + (40*i), 40, 28, 28, "#000");
         DrawRect(40 + (40*i), 40, 20, 20, player.health > i ? "#F00" : "#444");
     }
 
