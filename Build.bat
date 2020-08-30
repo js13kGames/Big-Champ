@@ -14,3 +14,6 @@ call "C:\Program Files\7-Zip\7z.exe" a -tzip build\404.zip build\index.html buil
 
 REM Cleanup
 del build\*.map /q
+
+REM Wait for user input
+pause

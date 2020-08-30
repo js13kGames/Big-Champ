@@ -205,7 +205,7 @@ class V2
 state = null;
 nextState = null;
 Enter = 0; Tick = 1; Draw = 2; Exit = 3;
-clearColor = "#2A2A2AFF";
+clearColor = "#1A1A1AFF";
 gameLoopFixedTimeStep = 1/60;
 gameLoopFrameTimeAccum = 0;
 previousGameLoopTime = undefined;
@@ -256,7 +256,7 @@ GameLoop = (curTime) =>
 
 // Start it up!
 window.requestAnimationFrame(GameLoop);
-enemyFuncs = []
+enemyFuncs = [];
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowRun())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_FastRun())}});
 enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowBounce())}});
@@ -286,9 +286,61 @@ CreateEnemy = () =>
     }
 }
 
+crowd = [];
+crowdColors = ["#331C16", "#400101", "#2A110A", "#28251E", "#152833", "#333015", "#06280D"];
+for (let i = 0; i < 300; ++i)
+{
+    crowd.push(
+    {
+        x: Math.random()*gameWidth,
+        y: Math.random()*gameHeight*0.5,
+        col: Math.floor(Math.random() * crowdColors.length),
+        off: Math.random(),
+        spd: Math.random()*0.003
+    });
+}
+flashes = [];
+nextFlashTime = Math.floor(Math.random()*100);
+DrawCrowd = () =>
+{
+    crowd.forEach(c =>
+    {
+        DrawRect(c.x, c.y + Math.abs(Math.sin(Date.now()*(0.001+c.spd) + c.off)*3), 10, 10, crowdColors[c.col]);
+    });
+
+    for (let i = 0; i < flashes.length; ++i)
+    {
+        let f = flashes[i];
+        let a = "F";
+        if (f.t < 2) { a = "4"; }
+        else if (f.t < 5) { a = "8"; }
+        else if (f.t < 10) { a = "A"; }
+        DrawRect(f.x, f.y, 25, 25, "#FFF" + a);
+        f.t--;
+        if (f.t <= 0)
+        {
+            flashes.splice(i, 1);
+        }
+    }
+
+    // Start new flashes
+    nextFlashTime--;
+    if (nextFlashTime <= 0)
+    {
+        nextFlashTime = Math.floor(Math.random()*50);
+        flashes.push({x: Math.random()*gameWidth, y: Math.random()*gameHeight*0.3, t: 15});
+    }
+}
+
 DrawBackground = () =>
 {
     let ropeWidth = 15;
+
+    // Crowd
+    DrawCrowd();
+
+    // Stadium wall
+    DrawRect(gameWidth*0.5, gameHeight*0.5, gameWidth, 100, "#383838");
 
     PushMatrix(0, -player.bellyOffset.y*0.25, 0);
 
@@ -334,6 +386,7 @@ DrawHud = () =>
 {
     for (let i = 0; i < 3; ++i)
     {
+        DrawRect(40 + (40*i), 40, 28, 28, "#000");
         DrawRect(40 + (40*i), 40, 20, 20, player.health > i ? "#F00" : "#444");
     }
 
@@ -341,9 +394,13 @@ DrawHud = () =>
 }
 let PlayerStateIdle = 0;
 let PlayerStateBelly = 1;
+let PlayerStateHit = 2;
+let PlayerStateDead = 3;
 
 let BellyBounceTime = 45;
 let BellyBounceAttackTime = 8;
+
+let PlayerHitTime = 20;
 
 class Player
 {
@@ -368,7 +425,7 @@ class Player
         {
             case PlayerStateIdle:
             {
-                if (touch.down)
+                if (touch.down && state != RenderTest)
                 {
                     this.BellyBounce();
                 }
@@ -388,6 +445,29 @@ class Player
                     this.BellyBounce();
                 }
             } break;
+
+            case PlayerStateHit:
+            {
+                this.timer--;
+                if (this.timer == 0)
+                {
+                    if (this.health == 0)
+                    {
+                        this.bellyOffset.x = 10;
+                        this.bellyOffset.y = 10;
+                        nextState = GameOver;
+                        this.state = PlayerStateDead;
+                    }
+                    else
+                    {
+                        this.Idle();
+                    }
+                }
+            } break;
+
+            case PlayerStateDead:
+            {
+            } break;
         }
 
         this.UpdateBellyPhysics();
@@ -404,8 +484,8 @@ class Player
 
     BellyBounce()
     {
-        this.bellyOffset.x = 5;
-        this.bellyOffset.y = 10;
+        this.bellyOffset.x = 15;
+        this.bellyOffset.y = 15;
         this.timer = BellyBounceTime;
         this.state = PlayerStateBelly;
     }
@@ -424,16 +504,21 @@ class Player
 
     OnHit(enemy)
     {
-        this.timer = 15;
-        this.health--;
-        if (this.health == 0)
+        if (this.health > 0)
         {
-            nextState = GameOver;
+            this.timer = 15;
+            this.health--;
+            this.timer = PlayerHitTime;
+            this.state = PlayerStateHit;
+            this.bellyOffset.x = 5;
+            this.bellyOffset.y = 5;
         }
     }
 
     UpdateBellyPhysics()
     {
+        // Super duper simple one-pointer verlet integration
+
         // Simulate
         let vx = (this.bellyOffset.x - this.bellyOffset.xLast);
         let vy = (this.bellyOffset.y - this.bellyOffset.yLast);
@@ -483,12 +568,32 @@ class Player
 
             case PlayerStateBelly:
             {
-                this.DrawLeg(90, 35, 30);        // Left leg
-                this.DrawBody(40, -20, -15);         // Body
-                this.DrawHead(-5, -100, -40);     // Head
-                this.DrawOutfit(40, -20, -15);       // Outfit
+                this.DrawLeg(90, 35, 30);       // Left leg
+                this.DrawBody(40, -20, -15);    // Body
+                this.DrawHead(-5, -100, -40);   // Head
+                this.DrawOutfit(40, -20, -15);  // Outfit
                 this.DrawLeg(25, 35, 30);       // Right leg
-                this.DrawArm(-30, -22, 10);      // Arm
+                this.DrawArm(-30, -22, 10);     // Arm
+            } break;
+
+            case PlayerStateHit:
+            {
+                this.DrawLeg(26, 14, -30);        // Left leg
+                this.DrawBody(-20, 5, 0);         // Body
+                this.DrawHead(-10, -80, 20);     // Head
+                this.DrawOutfit(-20, 5, 0);       // Outfit
+                this.DrawLeg(-50, 24, -35);       // Right leg
+                this.DrawArm(-88, -15, -50);      // Arm
+            } break;
+
+            case PlayerStateDead:
+            {
+                this.DrawLeg(-6, 24, -60);        // Left leg
+                this.DrawBody(-40, 15, 0);         // Body
+                this.DrawHead(-20, -60, 40 + Math.sin(Date.now()*0.001)*5);     // Head
+                this.DrawOutfit(-40, 15, 0);       // Outfit
+                this.DrawLeg(-80, 42, -60);       // Right leg
+                this.DrawArm(-108, -5, -20);      // Arm
             } break;
         }
 
@@ -556,6 +661,24 @@ class Player
                 DrawRect(22, 0, 12, 20, this.eyeColor);   // Right eye
                 DrawRect(5, 4, 10, 12, this.pupilColor);  // Left pupil
                 DrawRect(23, 4, 10, 12, this.pupilColor);  // Right pupil
+                DrawRect(10, 20, 40, 10, this.mouthColor);   // Mouth
+            } break;
+
+            case PlayerStateHit:
+            {
+                DrawRect(4, 0, 12, 20, this.eyeColor);   // Left eye
+                DrawRect(22, 0, 12, 20, this.eyeColor);   // Right eye
+                DrawRect(0, 4, 10, 12, this.pupilColor);  // Left pupil
+                DrawRect(28, -3, 10, 12, this.pupilColor);  // Right pupil
+                DrawRect(10, 20, 40, 10, this.mouthColor);   // Mouth
+            } break;
+
+            case PlayerStateDead:
+            {
+                DrawRect(4, 0, 4, 20, this.pupilColor, 45);   // Left eye (x)
+                DrawRect(4, 0, 4, 20, this.pupilColor, -45);   // Left eye (x)
+                DrawRect(22, 0, 4, 20, this.pupilColor, 45);   // Right eye (x)
+                DrawRect(22, 0, 4, 20, this.pupilColor, -45);   // Right eye (x)
                 DrawRect(10, 20, 40, 10, this.mouthColor);   // Mouth
             } break;
         }
@@ -997,7 +1120,7 @@ MainMenu = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
-            DrawText("Menu", gameWidth*0.5, gameHeight*0.5, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            DrawText("Menu", gameWidth*0.5, gameHeight*0.3, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
         } break;
     }
 }
@@ -1044,7 +1167,7 @@ GameOver = (reason) =>
                 nextState = MainMenu;
             }
 
-            //objs.forEach(o => o.Tick());
+            objs.forEach(o => o.Tick());
         } break;
 
         case Draw:
@@ -1052,7 +1175,7 @@ GameOver = (reason) =>
             DrawBackground();
             objs.forEach(o => o.Draw());
             DrawHud();
-            DrawText("Game Over", gameWidth*0.5, gameHeight*0.5, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            DrawText("Game Over", gameWidth*0.5, gameHeight*0.3, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
         } break;
     }
 }
@@ -1071,6 +1194,16 @@ RenderTest = (reason) =>
 
         case Tick:
         {
+            player.Tick();
+            if (touch.down)
+            {
+                player.state++;
+                if (player.state > PlayerStateDead)
+                {
+                    player.state = PlayerStateIdle;
+                }
+                //player.OnHit();
+            }
             objs[1].Animate();
         } break;
 
