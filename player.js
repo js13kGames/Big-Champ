@@ -196,7 +196,7 @@ class Player
             {
                 this.DrawLeg(-6, 24, -60);        // Left leg
                 this.DrawBody(-40, 15, 0);         // Body
-                this.DrawHead(-20, -60, 40);     // Head
+                this.DrawHead(-20, -60, 40 + Math.sin(Date.now()*0.001)*5);     // Head
                 this.DrawOutfit(-40, 15, 0);       // Outfit
                 this.DrawLeg(-80, 42, -60);       // Right leg
                 this.DrawArm(-108, -5, -20);      // Arm
