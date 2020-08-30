@@ -63,6 +63,8 @@ class Player
                         this.bellyOffset.y = 10;
                         nextState = GameOver;
                         this.state = PlayerStateDead;
+
+                        zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
                     }
                     else
                     {
@@ -94,6 +96,8 @@ class Player
         this.bellyOffset.y = 15;
         this.timer = BellyBounceTime;
         this.state = PlayerStateBelly;
+
+        zzfx(...[,,596,.05,,.09,1,.18,,-2.7,-4,.17,.11,,-2.1,,.1,,.02]); // Blip 48
     }
 
     IsBellyBounceAttacking()
@@ -106,6 +110,8 @@ class Player
         this.timer = 15;
         this.hitConfirm = true;
         this.score++;
+
+        zzfx(...[,,235,,,.12,,.15,-4.2,-6.7,,,,1.4,,.1,,.85,.04]); // Hit 87
     }
 
     OnHit(enemy)
@@ -118,6 +124,8 @@ class Player
             this.state = PlayerStateHit;
             this.bellyOffset.x = 5;
             this.bellyOffset.y = 5;
+
+            zzfx(...[,,272,,,.16,3,2.99,-1.7,1.6,,,,1.4,-0.7,.2,,.68,.03]); // Hit 54
         }
     }
 

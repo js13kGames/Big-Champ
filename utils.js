@@ -22,6 +22,8 @@ CreateEnemy = () =>
             {
                 //setTimeout(enemyFuncs[i].func, (250 + Math.random()*250)*c);
                 enemyFuncs[i].func();
+
+                zzfx(...[,,521,.02,,.09,,2.24,-11,-39,-961,.15,,.1,,,.01,,.03]); // Blip 153
             }
             break;
         }
