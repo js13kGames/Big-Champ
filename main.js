@@ -24,7 +24,7 @@ MainMenu = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
-            DrawText("Menu", gameWidth*0.5, gameHeight*0.5, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            DrawText("Menu", gameWidth*0.5, gameHeight*0.3, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
         } break;
     }
 }
@@ -79,7 +79,7 @@ GameOver = (reason) =>
             DrawBackground();
             objs.forEach(o => o.Draw());
             DrawHud();
-            DrawText("Game Over", gameWidth*0.5, gameHeight*0.5, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            DrawText("Game Over", gameWidth*0.5, gameHeight*0.3, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
         } break;
     }
 }
