@@ -71,7 +71,7 @@ GameOver = (reason) =>
                 nextState = MainMenu;
             }
 
-            //objs.forEach(o => o.Tick());
+            objs.forEach(o => o.Tick());
         } break;
 
         case Draw:
@@ -98,6 +98,16 @@ RenderTest = (reason) =>
 
         case Tick:
         {
+            player.Tick();
+            if (touch.down)
+            {
+                player.state++;
+                if (player.state > PlayerStateDead)
+                {
+                    player.state = PlayerStateIdle;
+                }
+                //player.OnHit();
+            }
             objs[1].Animate();
         } break;
 
