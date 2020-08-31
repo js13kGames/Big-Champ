@@ -94,6 +94,7 @@ RenderTest = (reason) =>
             CreateEnemy();
             objs[1].pos.x = 600;
             objs[1].pos.y = 300;
+            objs[1].SetAnim(EnemyAnimJump);
         } break;
 
         case Tick:
@@ -121,6 +122,7 @@ RenderTest = (reason) =>
 }
 
 // Start initial state
+CreateAudioContext();
 nextState = GameState;//RenderTest;//MainMenu;
 
 // DEBUG

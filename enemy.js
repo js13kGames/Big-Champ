@@ -4,17 +4,27 @@ let EnemyStateBounceOff = 1;
 let EnemyStyleLowerShorts = 0;
 let EnemyStyleLowerPants = 1;
 
-let EnemyStyleHeadNormal = 0;
+let EnemyStyleUpperNone = 0;
+let EnemyStyleUpperTankTop = 1;
+
+let EnemyStyleHeadBald = 0;
+let EnemyStyleHeadShortHair = 1;
+let EnemyStyleHeadLongHair = 2;
+let EnemyStyleHeadMask = 3;
 
 let EnemyFrameIdle = 0;
 let EnemyFrameRun01 = 1;
 let EnemyFrameRun02 = 2;
 let EnemyFrameRun03 = 3;
 let EnemyFrameBounceOff = 4;
+let EnemyFrameSpin = 5;
+let EnemyFrameJump = 6;
 
 let EnemyAnimIdle = { frames: [EnemyFrameIdle], counts: [1] };
 let EnemyAnimRun = { frames: [EnemyFrameRun01, EnemyFrameRun02, EnemyFrameRun03, EnemyFrameRun02], counts: [9, 9, 9, 9] };
 let EnemyAnimBounceOff = { frames: [EnemyFrameBounceOff], counts: [1] };
+let EnemyAnimSpin = { frames: [EnemyFrameSpin], counts: [1] };
+let EnemyAnimJump = { frames: [EnemyFrameJump], counts: [1] };
 
 class Enemy
 {
@@ -31,16 +41,21 @@ class Enemy
 
         // Rendering vars
         this.styleLower = EnemyStyleLowerShorts;
-        this.styleHead = EnemyStyleHeadNormal;
-        this.frame = EnemyFrameBounceOff;
+        this.styleUpper = EnemyStyleUpperTankTop;
+        this.styleHead = EnemyStyleHeadMask;
         this.skinColor = "#DC774F";
         this.outlineColor = "#A3583A";
         this.outfitColor = "#B00";
         this.bootColor = "#B00";
         this.lacesColor = "#FFF";
         this.eyeColor = "#000";
+        this.hairColor = "#663508";
+        this.maskColor1 = "#B00";
+        this.maskColor2 = "#FFF";
+        this.chairColor = "#666";
 
         // Animation
+        this.frame = EnemyFrameIdle;
         this.SetAnim(EnemyAnimRun);
     }
 
@@ -201,6 +216,33 @@ class Enemy
                 this.DrawArm(20, -25, -120);      // Arm
                 PopMatrix();
             } break;
+
+            case EnemyFrameSpin:
+            {
+                PushMatrix(0, 0, -5);
+                this.DrawLeg(-23, 33, 120);   // Right leg
+                this.DrawArm(-30, -25, 45);      // Arm
+                this.DrawBody(0, 0, 0);     // Body
+                this.DrawHead(-15, -55, -20); // Head
+                this.DrawOutfit(0, 0, 0);   // Outift
+                this.DrawLeg(10, 33, 120);    // Left leg
+                this.DrawArm(20, -25, 45);      // Arm
+                PopMatrix();
+            } break;
+
+            case EnemyFrameJump:
+            {
+                PushMatrix(0, 0, -5);
+                this.DrawLeg(-23, 33, 30);   // Right leg
+                this.DrawArm(-30, -25, 110);      // Arm
+                this.DrawBody(0, 0, 0);     // Body
+                this.DrawHead(-10, -60, 5); // Head
+                this.DrawOutfit(0, 0, 0);   // Outift
+                this.DrawLeg(10, 33, -30);    // Left leg
+                this.DrawArm(20, -25, 45);      // Arm
+                this.DrawChair(-80, -60, 0);
+                PopMatrix();
+            } break;
         }
         PopMatrix();
 
@@ -219,12 +261,22 @@ class Enemy
     DrawOutfit(x, y, angle)
     {
         PushMatrix(x, y, angle);
-        switch(this.styleLower)
+        switch (this.styleLower)
         {
             case EnemyStyleLowerShorts:
             case EnemyStyleLowerPants:
             {
                 DrawRect(-5, 35, 60, 30, this.outfitColor);   // Shorts
+            } break;
+        }
+
+        switch (this.styleUpper)
+        {
+            case EnemyStyleUpperTankTop:
+            {
+                DrawRect(-5, 0, 60, 40, this.outfitColor);
+                DrawRect(-25, -20, 10, 40, this.outfitColor);
+                DrawRect(0, -20, 10, 40, this.outfitColor);
             } break;
         }
 
@@ -260,16 +312,32 @@ class Enemy
     {
         PushMatrix(x, y, angle);
 
-        DrawRect(0, 0, 50, 50, this.skinColor); // Head
+        DrawRect(0, 0, 50, 50, (this.styleHead == EnemyStyleHeadMask) ? this.maskColor1 : this.skinColor); // Head
 
         switch(this.styleHead)
         {
-            case EnemyStyleHeadNormal:
+            case EnemyStyleHeadShortHair:
             {
-                DrawRect(-12, 0, 9, 15, this.eyeColor);   // Left eye
-                DrawRect(5, 0, 9, 15, this.eyeColor);   // Right eye
+                DrawRect(0, -20, 50, 10, this.hairColor);   // Top hair
+                DrawRect(20, -15, 10, 20, this.hairColor);   // Back hair
+            } break;
+
+            case EnemyStyleHeadLongHair:
+            {
+                DrawRect(0, -20, 50, 10, this.hairColor);   // Top hair
+                DrawRect(20, -15, 10, 20, this.hairColor);   // Back hair
+                DrawRect(30, -5, 10, 20, this.hairColor);   // Back hair 2
+                DrawRect(38, -5, 10, 25, this.hairColor);   // Back hair 2
+            } break;
+
+            case EnemyStyleHeadMask:
+            {
+                DrawRect(-3, 0, 32, 20, this.maskColor2); // Mask color around eyes
             } break;
         }
+
+        DrawRect(-12, 0, 9, 15, this.eyeColor);   // Left eye
+        DrawRect(5, 0, 9, 15, this.eyeColor);   // Right eye
 
         PopMatrix();
     }
@@ -281,6 +349,16 @@ class Enemy
         DrawCircle(-1.5, 13.5, 12, this.outlineColor); // Armpit shadow
         DrawCircle(0, 0, 19, this.skinColor);   // Upper
         DrawCircle(0, 12, 12, this.skinColor); // Lower
+        PopMatrix();
+    }
+
+    DrawChair(x, y, angle)
+    {
+        PushMatrix(x, y, angle);
+        DrawRect(0, 0, 60, 35, this.chairColor);
+        DrawRect(0, -40, 60, 20, this.chairColor);
+        DrawRect(-25, 0, 10, 75, this.chairColor);
+        DrawRect(25, 0, 10, 75, this.chairColor);
         PopMatrix();
     }
 }

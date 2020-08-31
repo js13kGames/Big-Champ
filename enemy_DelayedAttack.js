@@ -3,10 +3,21 @@ class Enemy_DelayedAttack extends Enemy
     constructor()
     {
         super();
-        this.color = "#0FF";
         this.vel.Set(-12, 0);
         this.subState = 0;
         this.subTimer = 0;
+
+        this.styleLower = EnemyStyleLowerShorts;
+        this.styleUpper = EnemyStyleUpperTankTop;
+        this.styleHead = EnemyStyleHeadLongHair;
+        this.skinColor = "#A86741";
+        this.outlineColor = "#6D432A";
+        this.outfitColor = "#00B";
+        this.bootColor = "#00B";
+        this.lacesColor = "#FFF";
+        this.eyeColor = "#000";
+        this.hairColor = "#111";
+        this.SetAnim(EnemyAnimRun);
     }
 
     MoveToPlayer()
