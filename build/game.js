@@ -21,10 +21,10 @@ ctx.imageSmoothingEnabled = false;
 
 // Input (mouse/touch only!) --------------------------------------------------
 touch = { x: 0, y: 0, up: false, down: false, held: false}
-canvas.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; }, false);
+canvas.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; CreateAudioContext(); }, false);
 canvas.addEventListener("mouseup", e => { touch.up = true; touch.down = false; touch.held = false }, false);
 canvas.addEventListener("mousemove", e => { SetTouchPos(e); e.preventDefault(); }, false );
-canvas.addEventListener("touchstart", e => { SetTouchPos(e.touches[0]); touch.up = false; touch.down = true; touch.held = true; e.preventDefault(); }, false );
+canvas.addEventListener("touchstart", e => { SetTouchPos(e.touches[0]); touch.up = false; touch.down = true; touch.held = true; e.preventDefault(); CreateAudioContext(); }, false );
 canvas.addEventListener("touchend", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); }, false );
 canvas.addEventListener("touchcancel", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); }, false );
 canvas.addEventListener("touchmove", e => { SetTouchPos(e.touches[0]); e.preventDefault(); }, false );
@@ -32,12 +32,6 @@ SetTouchPos = (e) =>
 {
     touch.x = (e.pageX - canvas.offsetLeft) / gameScale;
     touch.y = (e.pageY - canvas.offsetTop) / gameScale;
-
-    // Create audio context on first touch to avoid console warnings
-    if (zzfx == undefined)
-    {
-        zzfxX=new AudioContext
-    }
 }
 
 // Rendering ------------------------------------------------------------------
@@ -152,6 +146,14 @@ DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName =
 zzfxV=.3 // volume
 zzfx=    // play sound
 (t=1,a=.05,n=220,e=0,f=0,h=.1,M=0,r=1,z=0,o=0,i=0,s=0,u=0,x=0,c=0,d=0,X=0,b=1,m=0,l=44100,B=99+e*l,C=f*l,P=h*l,g=m*l,w=X*l,A=2*Math.PI,D=(t=>0<t?1:-1),I=B+g+C+P+w,S=(z*=500*A/l**2),V=(n*=(1+2*a*Math.random()-a)*A/l),j=D(c)*A/4,k=0,p=0,q=0,v=0,y=0,E=0,F=1,G=[],H=zzfxX.createBufferSource(),J=zzfxX.createBuffer(1,I,l))=>{for(H.connect(zzfxX.destination);q<I;G[q++]=E)++y>100*d&&(y=0,E=k*n*Math.sin(p*c*A/l-j),E=D(E=M?1<M?2<M?3<M?Math.sin((E%A)**3):Math.max(Math.min(Math.tan(E),1),-1):1-(2*E/A%2+2)%2:1-4*Math.abs(Math.round(E/A)-E/A):Math.sin(E))*Math.abs(E)**r*t*zzfxV*(q<B?q/B:q<B+g?1-(q-B)/g*(1-b):q<B+g+C?b:q<I-w?(I-q-w)/P*b:0),E=w?E/2+(w>q?0:(q<I-w?1:(q-I)/w)*G[q-w|0]/2):E),k+=1-x+1e9*(Math.sin(q)+1)%2*x,p+=1-x+1e9*(Math.sin(q)**2+1)%2*x,n+=z+=500*o*A/l**3,F&&++F>s*l&&(n+=i*A/l,V+=i*A/l,F=0),u&&++v>u*l&&(n=V,z=S,v=1,F=F||1);return J.getChannelData(0).set(G),H.buffer=J,H.start(),H},zzfxX=undefined
+CreateAudioContext = () =>
+{
+    // Create audio context on first touch to avoid console warnings
+    if (zzfxX == undefined)
+    {
+        zzfxX = new AudioContext;
+    }
+}
 
 // Math -----------------------------------------------------------------------
 class V2
@@ -280,6 +282,8 @@ CreateEnemy = () =>
             {
                 //setTimeout(enemyFuncs[i].func, (250 + Math.random()*250)*c);
                 enemyFuncs[i].func();
+
+                zzfx(...[,,521,.02,,.09,,2.24,-11,-39,-961,.15,,.1,,,.01,,.03]); // Blip 153
             }
             break;
         }
@@ -457,6 +461,8 @@ class Player
                         this.bellyOffset.y = 10;
                         nextState = GameOver;
                         this.state = PlayerStateDead;
+
+                        zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
                     }
                     else
                     {
@@ -488,6 +494,8 @@ class Player
         this.bellyOffset.y = 15;
         this.timer = BellyBounceTime;
         this.state = PlayerStateBelly;
+
+        zzfx(...[,,596,.05,,.09,1,.18,,-2.7,-4,.17,.11,,-2.1,,.1,,.02]); // Blip 48
     }
 
     IsBellyBounceAttacking()
@@ -500,6 +508,8 @@ class Player
         this.timer = 15;
         this.hitConfirm = true;
         this.score++;
+
+        zzfx(...[,,235,,,.12,,.15,-4.2,-6.7,,,,1.4,,.1,,.85,.04]); // Hit 87
     }
 
     OnHit(enemy)
@@ -512,6 +522,8 @@ class Player
             this.state = PlayerStateHit;
             this.bellyOffset.x = 5;
             this.bellyOffset.y = 5;
+
+            zzfx(...[,,272,,,.16,3,2.99,-1.7,1.6,,,,1.4,-0.7,.2,,.68,.03]); // Hit 54
         }
     }
 
@@ -692,17 +704,27 @@ let EnemyStateBounceOff = 1;
 let EnemyStyleLowerShorts = 0;
 let EnemyStyleLowerPants = 1;
 
-let EnemyStyleHeadNormal = 0;
+let EnemyStyleUpperNone = 0;
+let EnemyStyleUpperTankTop = 1;
+
+let EnemyStyleHeadBald = 0;
+let EnemyStyleHeadShortHair = 1;
+let EnemyStyleHeadLongHair = 2;
+let EnemyStyleHeadMask = 3;
 
 let EnemyFrameIdle = 0;
 let EnemyFrameRun01 = 1;
 let EnemyFrameRun02 = 2;
 let EnemyFrameRun03 = 3;
 let EnemyFrameBounceOff = 4;
+let EnemyFrameSpin = 5;
+let EnemyFrameJump = 6;
 
 let EnemyAnimIdle = { frames: [EnemyFrameIdle], counts: [1] };
 let EnemyAnimRun = { frames: [EnemyFrameRun01, EnemyFrameRun02, EnemyFrameRun03, EnemyFrameRun02], counts: [9, 9, 9, 9] };
 let EnemyAnimBounceOff = { frames: [EnemyFrameBounceOff], counts: [1] };
+let EnemyAnimSpin = { frames: [EnemyFrameSpin], counts: [1] };
+let EnemyAnimJump = { frames: [EnemyFrameJump], counts: [1] };
 
 class Enemy
 {
@@ -719,16 +741,21 @@ class Enemy
 
         // Rendering vars
         this.styleLower = EnemyStyleLowerShorts;
-        this.styleHead = EnemyStyleHeadNormal;
-        this.frame = EnemyFrameBounceOff;
+        this.styleUpper = EnemyStyleUpperTankTop;
+        this.styleHead = EnemyStyleHeadMask;
         this.skinColor = "#DC774F";
         this.outlineColor = "#A3583A";
         this.outfitColor = "#B00";
         this.bootColor = "#B00";
         this.lacesColor = "#FFF";
         this.eyeColor = "#000";
+        this.hairColor = "#663508";
+        this.maskColor1 = "#B00";
+        this.maskColor2 = "#FFF";
+        this.chairColor = "#666";
 
         // Animation
+        this.frame = EnemyFrameIdle;
         this.SetAnim(EnemyAnimRun);
     }
 
@@ -889,6 +916,33 @@ class Enemy
                 this.DrawArm(20, -25, -120);      // Arm
                 PopMatrix();
             } break;
+
+            case EnemyFrameSpin:
+            {
+                PushMatrix(0, 0, -5);
+                this.DrawLeg(-23, 33, 120);   // Right leg
+                this.DrawArm(-30, -25, 45);      // Arm
+                this.DrawBody(0, 0, 0);     // Body
+                this.DrawHead(-15, -55, -20); // Head
+                this.DrawOutfit(0, 0, 0);   // Outift
+                this.DrawLeg(10, 33, 120);    // Left leg
+                this.DrawArm(20, -25, 45);      // Arm
+                PopMatrix();
+            } break;
+
+            case EnemyFrameJump:
+            {
+                PushMatrix(0, 0, -5);
+                this.DrawLeg(-23, 33, 30);   // Right leg
+                this.DrawArm(-30, -25, 110);      // Arm
+                this.DrawBody(0, 0, 0);     // Body
+                this.DrawHead(-10, -60, 5); // Head
+                this.DrawOutfit(0, 0, 0);   // Outift
+                this.DrawLeg(10, 33, -30);    // Left leg
+                this.DrawArm(20, -25, 45);      // Arm
+                this.DrawChair(-80, -60, 0);
+                PopMatrix();
+            } break;
         }
         PopMatrix();
 
@@ -907,12 +961,22 @@ class Enemy
     DrawOutfit(x, y, angle)
     {
         PushMatrix(x, y, angle);
-        switch(this.styleLower)
+        switch (this.styleLower)
         {
             case EnemyStyleLowerShorts:
             case EnemyStyleLowerPants:
             {
                 DrawRect(-5, 35, 60, 30, this.outfitColor);   // Shorts
+            } break;
+        }
+
+        switch (this.styleUpper)
+        {
+            case EnemyStyleUpperTankTop:
+            {
+                DrawRect(-5, 0, 60, 40, this.outfitColor);
+                DrawRect(-25, -20, 10, 40, this.outfitColor);
+                DrawRect(0, -20, 10, 40, this.outfitColor);
             } break;
         }
 
@@ -948,16 +1012,32 @@ class Enemy
     {
         PushMatrix(x, y, angle);
 
-        DrawRect(0, 0, 50, 50, this.skinColor); // Head
+        DrawRect(0, 0, 50, 50, (this.styleHead == EnemyStyleHeadMask) ? this.maskColor1 : this.skinColor); // Head
 
         switch(this.styleHead)
         {
-            case EnemyStyleHeadNormal:
+            case EnemyStyleHeadShortHair:
             {
-                DrawRect(-12, 0, 9, 15, this.eyeColor);   // Left eye
-                DrawRect(5, 0, 9, 15, this.eyeColor);   // Right eye
+                DrawRect(0, -20, 50, 10, this.hairColor);   // Top hair
+                DrawRect(20, -15, 10, 20, this.hairColor);   // Back hair
+            } break;
+
+            case EnemyStyleHeadLongHair:
+            {
+                DrawRect(0, -20, 50, 10, this.hairColor);   // Top hair
+                DrawRect(20, -15, 10, 20, this.hairColor);   // Back hair
+                DrawRect(30, -5, 10, 20, this.hairColor);   // Back hair 2
+                DrawRect(38, -5, 10, 25, this.hairColor);   // Back hair 2
+            } break;
+
+            case EnemyStyleHeadMask:
+            {
+                DrawRect(-3, 0, 32, 20, this.maskColor2); // Mask color around eyes
             } break;
         }
+
+        DrawRect(-12, 0, 9, 15, this.eyeColor);   // Left eye
+        DrawRect(5, 0, 9, 15, this.eyeColor);   // Right eye
 
         PopMatrix();
     }
@@ -971,6 +1051,16 @@ class Enemy
         DrawCircle(0, 12, 12, this.skinColor); // Lower
         PopMatrix();
     }
+
+    DrawChair(x, y, angle)
+    {
+        PushMatrix(x, y, angle);
+        DrawRect(0, 0, 60, 35, this.chairColor);
+        DrawRect(0, -40, 60, 20, this.chairColor);
+        DrawRect(-25, 0, 10, 75, this.chairColor);
+        DrawRect(25, 0, 10, 75, this.chairColor);
+        PopMatrix();
+    }
 }
 class Enemy_SlowRun extends Enemy
 {
@@ -978,7 +1068,18 @@ class Enemy_SlowRun extends Enemy
     {
         super();
         this.vel.Set(-12, 0);
-        this.color = "#F00";
+
+        this.styleLower = EnemyStyleLowerShorts;
+        this.styleUpper = EnemyStyleUpperNone;
+        this.styleHead = EnemyStyleHeadShortHair;
+        this.skinColor = "#DC774F";
+        this.outlineColor = "#A3583A";
+        this.outfitColor = "#B00";
+        this.bootColor = "#B00";
+        this.lacesColor = "#FFF";
+        this.eyeColor = "#000";
+        this.hairColor = "#663508";
+        this.SetAnim(EnemyAnimRun);
     }
 }
 class Enemy_FastRun extends Enemy
@@ -987,7 +1088,18 @@ class Enemy_FastRun extends Enemy
     {
         super();
         this.vel.Set(-18, 0);
-        this.color = "#600";
+        
+        this.styleLower = EnemyStyleLowerPants;
+        this.styleUpper = EnemyStyleUpperTankTop;
+        this.styleHead = EnemyStyleHeadBald;
+        this.skinColor = "#D8A79E";
+        this.outlineColor = "#AA8077";
+        this.outfitColor = "#025930";
+        this.bootColor = "#025930";
+        this.lacesColor = "#FFF";
+        this.eyeColor = "#000";
+        this.hairColor = "#663508";
+        this.SetAnim(EnemyAnimRun);
     }
 }
 class Enemy_SlowBounce extends Enemy
@@ -998,6 +1110,21 @@ class Enemy_SlowBounce extends Enemy
         this.color = "#00F";
         this.pos.Set(this.pos.x + 140, this.pos.y);
         this.vel.Set(-10, -16);
+
+        this.styleLower = EnemyStyleLowerShorts;
+        this.styleUpper = EnemyStyleUpperNone;
+        this.styleHead = EnemyStyleHeadMask;
+        this.skinColor = "#CF7B41";
+        this.outlineColor = "#87502B";
+        this.outfitColor = "#CCC";
+        this.bootColor = "#CCC";
+        this.lacesColor = "#000";
+        this.eyeColor = "#000";
+        this.maskColor1 = "#CCC";
+        this.maskColor2 = "#BB0";
+        this.SetAnim(EnemyAnimSpin);
+
+        this.isBouncing = true;
     }
 
     MoveToPlayer()
@@ -1010,6 +1137,18 @@ class Enemy_SlowBounce extends Enemy
         {
             this.pos.y = 296;
             this.vel.y = -16;
+
+            if (this.pos.x < gameWidth)
+            {
+                this.isBouncing = false;
+                this.SetAnim(EnemyAnimJump);
+                this.angle = -30;
+            }
+        }
+
+        if (this.isBouncing)
+        {
+            this.angle -= 10;
         }
     }
 }
@@ -1018,10 +1157,21 @@ class Enemy_DelayedAttack extends Enemy
     constructor()
     {
         super();
-        this.color = "#0FF";
         this.vel.Set(-12, 0);
         this.subState = 0;
         this.subTimer = 0;
+
+        this.styleLower = EnemyStyleLowerShorts;
+        this.styleUpper = EnemyStyleUpperTankTop;
+        this.styleHead = EnemyStyleHeadLongHair;
+        this.skinColor = "#A86741";
+        this.outlineColor = "#6D432A";
+        this.outfitColor = "#00B";
+        this.bootColor = "#00B";
+        this.lacesColor = "#FFF";
+        this.eyeColor = "#000";
+        this.hairColor = "#111";
+        this.SetAnim(EnemyAnimRun);
     }
 
     MoveToPlayer()
@@ -1079,6 +1229,20 @@ class Enemy_LongJump extends Enemy
         this.pos.Set(this.pos.x + 80, this.pos.y);
         this.vel.Set(-20, -20);
         this.angle = -10;
+
+        this.styleLower = EnemyStyleLowerShorts;
+        this.styleUpper = EnemyStyleUpperTankTop;
+        this.styleHead = EnemyStyleHeadMask;
+        this.skinColor = "#C17920";
+        this.outlineColor = "#935C19";
+        this.outfitColor = "#6D59C8";
+        this.bootColor = "#6D59C8";
+        this.lacesColor = "#FFF";
+        this.eyeColor = "#000";
+        this.hairColor = "#663508";
+        this.maskColor1 = "#6D59C8";
+        this.maskColor2 = "#FFF";
+        this.SetAnim(EnemyAnimSpin);
     }
 
     MoveToPlayer()
@@ -1092,6 +1256,8 @@ class Enemy_LongJump extends Enemy
             this.pos.y = 296;
             this.vel.y = -18;
         }
+
+        this.angle -= 10;
     }
 }
 let player = new Player();
@@ -1190,6 +1356,7 @@ RenderTest = (reason) =>
             CreateEnemy();
             objs[1].pos.x = 600;
             objs[1].pos.y = 300;
+            objs[1].SetAnim(EnemyAnimJump);
         } break;
 
         case Tick:
@@ -1217,6 +1384,7 @@ RenderTest = (reason) =>
 }
 
 // Start initial state
+CreateAudioContext();
 nextState = GameState;//RenderTest;//MainMenu;
 
 // DEBUG
