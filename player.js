@@ -93,6 +93,8 @@ class Player
     BellyBounce()
     {
         this.hitConfirm = false;
+        this.bellyOffset.xLast = 0;
+        this.bellyOffset.yLast = 0;
         this.bellyOffset.x = 15;
         this.bellyOffset.y = 15;
         this.timer = BellyBounceTime;
