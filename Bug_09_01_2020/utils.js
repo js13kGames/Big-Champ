@@ -1,163 +1,52 @@
-enemySpawnInfo = [];
+enemyFuncs = [];
+enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowRun())}});
+enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_FastRun())}});
+enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_SlowBounce())}});
+enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_DelayedAttack())}});
+enemyFuncs.push({prob:1, func:()=>{objs.push(new Enemy_LongJump())}});
 
+let enemyFuncsTotalProb = 0;
+enemyFuncs.forEach(ef => enemyFuncsTotalProb += ef.prob);
+
+enemySpawnInfo = [];
 enemySpawnInfo.push({
-    maxPlayerScore: 0,
+    maxPlayerScore: 5,
     possibleEnemyTypes: [0],
     minSpawnCount: 1,
     maxSpawnCount: 1,
-    minSpawnDelay: 0,
-    maxSpawnDelay: 0,
-    minNextDelay: 2.0,
-    maxNextDelay: 2.5,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 3,
-    possibleEnemyTypes: [0,1,2],
-    minSpawnCount: 1,
-    maxSpawnCount: 1,
-    minSpawnDelay: 0,
-    maxSpawnDelay: 0,
-    minNextDelay: 2.0,
-    maxNextDelay: 2.0,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 8,
-    possibleEnemyTypes: [0,2,3],
-    minSpawnCount: 2,
-    maxSpawnCount: 2,
-    minSpawnDelay: 1.5,
-    maxSpawnDelay: 2.0,
-    minNextDelay: 1.75,
-    maxNextDelay: 2.0,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 10,
-    possibleEnemyTypes: [4],
-    minSpawnCount: 1,
-    maxSpawnCount: 1,
-    minSpawnDelay: 0,
-    maxSpawnDelay: 0,
-    minNextDelay: 1.75,
-    maxNextDelay: 1.75,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 20,
-    possibleEnemyTypes: [0,0,1,1,2,2,3,3,4],
-    minSpawnCount: 1,
-    maxSpawnCount: 2,
-    minSpawnDelay: 0.75,
-    maxSpawnDelay: 1.0,
-    minNextDelay: 1.5,
-    maxNextDelay: 1.75,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 35,
-    possibleEnemyTypes: [3,3,4,4],
-    minSpawnCount: 1,
-    maxSpawnCount: 2,
-    minSpawnDelay: 1.0,
-    maxSpawnDelay: 1.25,
-    minNextDelay: 1.5,
-    maxNextDelay: 1.75,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 45,
-    possibleEnemyTypes: [0,1,2,3,4],
-    minSpawnCount: 2,
-    maxSpawnCount: 3,
     minSpawnDelay: 0.5,
-    maxSpawnDelay: 0.75,
-    minNextDelay: 1.75,
-    maxNextDelay: 1.75,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 60,
-    possibleEnemyTypes: [1,2,3,4],
-    minSpawnCount: 2,
-    maxSpawnCount: 2,
-    minSpawnDelay: 0.4,
-    maxSpawnDelay: 0.6,
-    minNextDelay: 1.35,
-    maxNextDelay: 1.35,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 80,
-    possibleEnemyTypes: [0,1,2,3,4],
-    minSpawnCount: 3,
-    maxSpawnCount: 4,
-    minSpawnDelay: 0.3,
     maxSpawnDelay: 0.5,
-    minNextDelay: 1.15,
-    maxNextDelay: 1.25,
-});
-enemySpawnInfo.push({
-    maxPlayerScore: 100,
-    possibleEnemyTypes: [0,1,2,3,4],
-    minSpawnCount: 4,
-    maxSpawnCount: 6,
-    minSpawnDelay: 0.25,
-    maxSpawnDelay: 0.45,
-    minNextDelay: 1.1,
-    maxNextDelay: 1.2,
+    minNextDelay: 2.0,
+    maxNextDelay: 2.0,
 });
 
-enemyIdxBag = [];
-lastSpawnInfoIdx = -1;
-testScore = -1;
 CreateEnemy = () =>
 {
     for (let i = 0; i < enemySpawnInfo.length; ++i)
     {
         let es = enemySpawnInfo[i];
-
-        if (testScore != undefined && testScore > 0)
-        {
-            player.score = testScore;
-        }
-
         if (player.score <= es.maxPlayerScore || i == (enemySpawnInfo.length - 1))
         {
-            // New enemy bag?
-            if (i != lastSpawnInfoIdx)
-            {
-                lastSpawnInfoIdx = i;
-                enemyIdxBag = [];
-            }
-
             let spawnCountRange = es.maxSpawnCount - es.minSpawnCount;
             let spawnCount = es.minSpawnCount + Math.floor((Math.random()*spawnCountRange) + 0.5);
             let spawnDelay = 0.0;
             for (let c = 0; c < spawnCount; ++c)
             {
-                // Pick random enemy that hasn't already been chosen (in our bag)
-                let enemyIdx = -1;
-                do
+                let enemyIdx = Math.floor(Math.random()*es.possibleEnemyTypes.length);
+                switch (enemyIdx)
                 {
-                    enemyIdx = Math.floor(Math.random()*es.possibleEnemyTypes.length);
-                } while (enemyIdxBag.includes(enemyIdx));
-
-                // Bag full = reset
-                enemyIdxBag.push(enemyIdx);
-                if (enemyIdxBag.length == es.possibleEnemyTypes.length)
-                {
-                    enemyIdxBag = [];
-                }
-
-                switch (es.possibleEnemyTypes[enemyIdx])
-                {
-                    case 0: setTimeout(()=>{objs.push(new Enemy_SlowRun())}, spawnDelay * 1000); break;
-                    case 1: setTimeout(()=>{objs.push(new Enemy_FastRun())}, spawnDelay * 1000); break;
-                    case 2: setTimeout(()=>{objs.push(new Enemy_DelayedAttack())}, spawnDelay * 1000); break;
-                    case 3: setTimeout(()=>{objs.push(new Enemy_LongJump())}, spawnDelay * 1000); break;
-                    case 4: setTimeout(()=>{objs.push(new Enemy_SlowBounce())}, spawnDelay * 1000); break;
+                    case 0: setTimeout(()=>{objs.push(new Enemy_SlowRun())}, spawnDelay); break;
+                    case 1: setTimeout(()=>{objs.push(new Enemy_FastRun())}, spawnDelay); break;
+                    case 2: setTimeout(()=>{objs.push(new Enemy_DelayedAttack())}, spawnDelay); break;
+                    case 3: setTimeout(()=>{objs.push(new Enemy_LongJump())}, spawnDelay); break;
+                    case 4: setTimeout(()=>{objs.push(new Enemy_SlowBounce())}, spawnDelay); break;
                 }
 
                 spawnDelay += es.minSpawnDelay + (Math.random()*(es.maxSpawnDelay - es.minSpawnDelay))
             }
 
             let nextDelay = es.minNextDelay + (Math.random()*(es.maxNextDelay - es.minNextDelay))
-            enemyTimer = setTimeout(CreateEnemy, (spawnDelay + nextDelay) * 1000);
-            
+            setTimeout(CreateEnemy, spawnDelay + nextDelay);
 
             break;
         }

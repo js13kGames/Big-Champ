@@ -36,7 +36,8 @@ GameState = (reason) =>
         case Enter:
         {
             player.Reset();
-            setTimeout(CreateEnemy, 2000);
+            //enemyTimer = setInterval(() => CreateEnemy(), 1500);
+            CreateEnemy();
         } break;
 
         case Tick:
@@ -60,7 +61,7 @@ GameOver = (reason) =>
         case Enter:
         {
             touchDelay = 60;
-            clearTimeout(enemyTimer);
+            clearInterval(enemyTimer);
         } break;
 
         case Tick:
