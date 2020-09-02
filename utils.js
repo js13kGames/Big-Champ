@@ -275,8 +275,8 @@ DrawHud = () =>
 {
     for (let i = 0; i < 3; ++i)
     {
-        DrawRect(40 + (40*i), 40, 28, 28, "#000");
-        DrawRect(40 + (40*i), 40, 20, 20, player.health > i ? "#F00" : "#444");
+        DrawRect(40 + (40*i), 32, 28, 28, "#000");
+        DrawRect(40 + (40*i), 32, 20, 20, player.health > i ? "#F00" : "#444");
     }
 
     DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#FFF", 0, "Arial", "Bold", "right", "center", 8);
