@@ -105,7 +105,8 @@ class Player
 
     IsBellyBounceAttacking()
     {
-        return (this.state == PlayerStateBelly) && (this.timer >= BellyBounceTime - BellyBounceAttackTime);
+        return (this.state == PlayerStateBelly) &&
+               ((this.timer >= BellyBounceTime - BellyBounceAttackTime) || (this.hitConfirm && this.timer >= 7));
     }
 
     OnBounce(enemy)

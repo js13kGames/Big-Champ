@@ -21,7 +21,7 @@ enemySpawnInfo.push({
     maxNextDelay: 2.0,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 8,
+    maxPlayerScore: 6,
     possibleEnemyTypes: [0,2,3],
     minSpawnCount: 2,
     maxSpawnCount: 2,
@@ -31,7 +31,7 @@ enemySpawnInfo.push({
     maxNextDelay: 2.0,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 10,
+    maxPlayerScore: 8,
     possibleEnemyTypes: [4],
     minSpawnCount: 1,
     maxSpawnCount: 1,
@@ -41,9 +41,9 @@ enemySpawnInfo.push({
     maxNextDelay: 1.75,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 20,
+    maxPlayerScore: 15,
     possibleEnemyTypes: [0,0,1,1,2,2,3,3,4],
-    minSpawnCount: 1,
+    minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 0.75,
     maxSpawnDelay: 1.0,
@@ -51,9 +51,9 @@ enemySpawnInfo.push({
     maxNextDelay: 1.75,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 35,
+    maxPlayerScore: 20,
     possibleEnemyTypes: [3,3,4,4],
-    minSpawnCount: 1,
+    minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 1.0,
     maxSpawnDelay: 1.25,
@@ -61,7 +61,7 @@ enemySpawnInfo.push({
     maxNextDelay: 1.75,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 45,
+    maxPlayerScore: 30,
     possibleEnemyTypes: [0,1,2,3,4],
     minSpawnCount: 2,
     maxSpawnCount: 3,
@@ -71,7 +71,7 @@ enemySpawnInfo.push({
     maxNextDelay: 1.75,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 60,
+    maxPlayerScore: 35,
     possibleEnemyTypes: [1,2,3,4],
     minSpawnCount: 2,
     maxSpawnCount: 2,
@@ -81,7 +81,7 @@ enemySpawnInfo.push({
     maxNextDelay: 1.35,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 80,
+    maxPlayerScore: 50,
     possibleEnemyTypes: [0,1,2,3,4],
     minSpawnCount: 3,
     maxSpawnCount: 4,
@@ -106,6 +106,12 @@ lastSpawnInfoIdx = -1;
 testScore = -1;
 CreateEnemy = () =>
 {
+    // DEBUG
+    // setTimeout(()=>{objs.push(new Enemy_DelayedAttack())}, 1000);
+    // setTimeout(()=>{objs.push(new Enemy_SlowRun())}, 1500);
+    // setTimeout(CreateEnemy, 6000);
+    // return;
+
     for (let i = 0; i < enemySpawnInfo.length; ++i)
     {
         let es = enemySpawnInfo[i];

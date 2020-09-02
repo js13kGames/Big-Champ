@@ -236,6 +236,10 @@ GameLoop = (curTime) =>
         {
             state(Tick);
         }
+
+        // Clear per-frame input values
+        touch.up = false;
+        touch.down = false;
     }
 
     // Clear canvas
@@ -248,10 +252,6 @@ GameLoop = (curTime) =>
     {
         state(Draw);
     }
-
-    // Clear per-frame input values
-    touch.up = false;
-    touch.down = false;
 
     previousGameLoopTime = curTime;
 }
