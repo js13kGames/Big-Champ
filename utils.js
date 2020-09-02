@@ -27,8 +27,8 @@ enemySpawnInfo.push({
     maxSpawnCount: 2,
     minSpawnDelay: 1.5,
     maxSpawnDelay: 2.0,
-    minNextDelay: 1.75,
-    maxNextDelay: 2.0,
+    minNextDelay: 1.25,
+    maxNextDelay: 1.5,
 });
 enemySpawnInfo.push({
     maxPlayerScore: 8,
@@ -37,8 +37,8 @@ enemySpawnInfo.push({
     maxSpawnCount: 1,
     minSpawnDelay: 0,
     maxSpawnDelay: 0,
-    minNextDelay: 1.75,
-    maxNextDelay: 1.75,
+    minNextDelay: 1.25,
+    maxNextDelay: 1.5,
 });
 enemySpawnInfo.push({
     maxPlayerScore: 15,
