@@ -61,7 +61,7 @@ enemySpawnInfo.push({
     maxNextDelay: 1.75,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 30,
+    maxPlayerScore: 25,
     possibleEnemyTypes: [0,1,2,3,4],
     minSpawnCount: 2,
     maxSpawnCount: 3,
