@@ -6,6 +6,26 @@ objs.push(player);
 let enemyTimer;
 let touchDelay;
 
+TouchState = (reason) =>
+{
+    switch (reason)
+    {
+        case Tick:
+        {
+            if (touch.down)
+            {
+                CreateAudioContext();
+                nextState = MainMenu;
+            }
+        } break;
+
+        case Draw:
+        {
+            DrawText("Tap To Start", gameWidth*0.5, gameHeight*0.5, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+        } break;
+    }
+}
+
 MainMenu = (reason) =>
 {
     switch (reason)
@@ -147,8 +167,7 @@ RenderTest = (reason) =>
 }
 
 // Start initial state
-CreateAudioContext();
-nextState = MainMenu;//RenderTest;//MainMenu;
+nextState = TouchState;//RenderTest;//MainMenu;
 
 // DEBUG
 window.addEventListener("keydown", e =>

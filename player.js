@@ -13,13 +13,12 @@ class Player
 {
     constructor()
     {
-        this.pos = new V2();
+        this.pos = new V2(200, -280);
         this.bellyOffset = new V2(0, 0);
         this.bellyOffset.xLast = 0;
         this.bellyOffset.yLast = 0;
 
         this.Reset();
-        this.Intro();
     }
 
     Reset()
@@ -94,6 +93,8 @@ class Player
                     this.bellyOffset.yLast = 0;
                     this.bellyOffset.x = 5;
                     this.bellyOffset.y = 15;
+
+                    zzfx(...[,,309,,.02,.32,2,.47,,,,,,1.1,.7,,.15,.99,.09]); // Hit 180
                 }
             } break;
         }
@@ -115,6 +116,7 @@ class Player
         this.pos.Set(200, -280);
         this.timer = 22;
         this.state = PlayerStateIntro;
+        zzfx(...[,,806,.05,.08,.47,2,.62,-2.8,3.1,,,,,,,.04,.63,.01]); // Jump 229
     }
 
     BellyBounce()

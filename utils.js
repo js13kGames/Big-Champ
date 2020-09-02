@@ -151,11 +151,11 @@ CreateEnemy = () =>
 
                 switch (es.possibleEnemyTypes[enemyIdx])
                 {
-                    case 0: setTimeout(()=>{objs.push(new Enemy_SlowRun())}, spawnDelay * 1000); break;
-                    case 1: setTimeout(()=>{objs.push(new Enemy_FastRun())}, spawnDelay * 1000); break;
-                    case 2: setTimeout(()=>{objs.push(new Enemy_DelayedAttack())}, spawnDelay * 1000); break;
-                    case 3: setTimeout(()=>{objs.push(new Enemy_LongJump())}, spawnDelay * 1000); break;
-                    case 4: setTimeout(()=>{objs.push(new Enemy_SlowBounce())}, spawnDelay * 1000); break;
+                    case 0: setTimeout(()=>{objs.push(new Enemy_SlowRun()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
+                    case 1: setTimeout(()=>{objs.push(new Enemy_FastRun()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
+                    case 2: setTimeout(()=>{objs.push(new Enemy_DelayedAttack()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
+                    case 3: setTimeout(()=>{objs.push(new Enemy_LongJump()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
+                    case 4: setTimeout(()=>{objs.push(new Enemy_SlowBounce()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
                 }
 
                 spawnDelay += es.minSpawnDelay + (Math.random()*(es.maxSpawnDelay - es.minSpawnDelay))
@@ -168,24 +168,11 @@ CreateEnemy = () =>
             break;
         }
     }
-    // let curProb = 0.0;
-    // let desiredProb = Math.random();
-    // for (let i = 0; i < enemyFuncs.length; ++i)
-    // {
-    //     curProb += enemyFuncs[i].prob / enemyFuncsTotalProb;
-    //     if (desiredProb <= curProb)
-    //     {
-    //         let count = Math.random() < 0.25 ? 2 : 1;//Math.floor(Math.random()*2.99) + 1;
-    //         //for (let c = 0; c < count; ++c)
-    //         {
-    //             //setTimeout(enemyFuncs[i].func, (250 + Math.random()*250)*c);
-    //             enemyFuncs[i].func();
+}
 
-    //             zzfx(...[,,521,.02,,.09,,2.24,-11,-39,-961,.15,,.1,,,.01,,.03]); // Blip 153
-    //         }
-    //         break;
-    //     }
-    // }
+PlayEnemySpawnSFX = () =>
+{
+    zzfx(...[,,90,.01,,.09,,2.92,,-43,53,.01,.01,,,,,.74,.02]); // Blip 167
 }
 
 crowd = [];

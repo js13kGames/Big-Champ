@@ -39,6 +39,7 @@ class Enemy_SlowBounce extends Enemy
                 this.isBouncing = false;
                 this.SetAnim(EnemyAnimJump);
                 this.angle = -30;
+                zzfx(...[,,144,.01,,.12,1,1.53,9.2,,,,,,,.1,,.62,.04]); // Jump 175
             }
         }
 

@@ -21,10 +21,10 @@ ctx.imageSmoothingEnabled = false;
 
 // Input (mouse/touch only!) --------------------------------------------------
 touch = { x: 0, y: 0, up: false, down: false, held: false}
-canvas.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; CreateAudioContext(); }, false);
+canvas.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; }, false);
 canvas.addEventListener("mouseup", e => { touch.up = true; touch.down = false; touch.held = false }, false);
 canvas.addEventListener("mousemove", e => { SetTouchPos(e); e.preventDefault(); }, false );
-canvas.addEventListener("touchstart", e => { SetTouchPos(e.touches[0]); touch.up = false; touch.down = true; touch.held = true; e.preventDefault(); CreateAudioContext(); }, false );
+canvas.addEventListener("touchstart", e => { SetTouchPos(e.touches[0]); touch.up = false; touch.down = true; touch.held = true; e.preventDefault(); }, false );
 canvas.addEventListener("touchend", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); }, false );
 canvas.addEventListener("touchcancel", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); }, false );
 canvas.addEventListener("touchmove", e => { SetTouchPos(e.touches[0]); e.preventDefault(); }, false );
