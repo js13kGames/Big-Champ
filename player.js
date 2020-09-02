@@ -2,6 +2,7 @@ let PlayerStateIdle = 0;
 let PlayerStateBelly = 1;
 let PlayerStateHit = 2;
 let PlayerStateDead = 3;
+let PlayerStateIntro = 4;
 
 let BellyBounceTime = 45;
 let BellyBounceAttackTime = 8;
@@ -12,17 +13,19 @@ class Player
 {
     constructor()
     {
+        this.pos = new V2();
+        this.bellyOffset = new V2(0, 0);
+        this.bellyOffset.xLast = 0;
+        this.bellyOffset.yLast = 0;
+
         this.Reset();
+        this.Intro();
     }
 
     Reset()
     {
-        this.Idle();
         this.health = 3;
         this.score = 0;
-        this.bellyOffset = new V2(0, 0);
-        this.bellyOffset.xLast = 0;
-        this.bellyOffset.yLast = 0;
     }
 
     Tick()
@@ -76,6 +79,23 @@ class Player
             case PlayerStateDead:
             {
             } break;
+
+            case PlayerStateIntro:
+            {
+                let startingY = -280;
+                let landingY = 280;
+                this.pos.Set(this.pos.x, landingY - (landingY - startingY)*(this.timer / 22));
+
+                this.timer--;
+                if (this.timer == 0)
+                {
+                    this.Idle();
+                    this.bellyOffset.xLast = 0;
+                    this.bellyOffset.yLast = 0;
+                    this.bellyOffset.x = 5;
+                    this.bellyOffset.y = 15;
+                }
+            } break;
         }
 
         this.UpdateBellyPhysics();
@@ -88,6 +108,13 @@ class Player
         this.timer = 0;
         this.hitConfirm = false;
         this.state = PlayerStateIdle;
+    }
+
+    Intro()
+    {
+        this.pos.Set(200, -280);
+        this.timer = 22;
+        this.state = PlayerStateIntro;
     }
 
     BellyBounce()
@@ -213,6 +240,16 @@ class Player
                 this.DrawLeg(-80, 42, -60);       // Right leg
                 this.DrawArm(-108, -5, -20);      // Arm
             } break;
+
+            case PlayerStateIntro:
+            {
+                this.DrawLeg(66, 24, -30);        // Left leg
+                this.DrawBody(0, 0, 0);         // Body
+                this.DrawHead(-10, -90, 0);     // Head
+                this.DrawOutfit(0, 0, 0);       // Outfit
+                this.DrawLeg(-20, 45, 30);       // Right leg
+                this.DrawArm(-64, -25, 30);      // Arm
+            } break;
         }
 
         PopMatrix();
@@ -265,6 +302,7 @@ class Player
         switch (this.state)
         {
             case PlayerStateIdle:
+            case PlayerStateIntro:
             {
                 DrawRect(4, 0, 12, 20, this.eyeColor);   // Left eye
                 DrawRect(22, 0, 12, 20, this.eyeColor);   // Right eye

@@ -14,10 +14,8 @@ MainMenu = (reason) =>
         {
             if (touch.down)
             {
-                nextState = GameState;
+                nextState = IntroState;
             }
-
-            //objs.forEach(o => o.Tick());
         } break;
 
         case Draw:
@@ -29,13 +27,40 @@ MainMenu = (reason) =>
     }
 }
 
-GameState = (reason) =>
+IntroState = (reason) =>
 {
     switch (reason)
     {
         case Enter:
         {
             player.Reset();
+            player.Intro();
+        } break;
+
+        case Tick:
+        {
+            objs.forEach(o => o.Tick());
+            if (player.state == PlayerStateIdle)
+            {
+                nextState = GameState
+            }
+        } break;
+
+        case Draw:
+        {
+            DrawBackground();
+            objs.forEach(o => o.Draw());
+            DrawHud();
+        } break;
+    }
+}
+
+GameState = (reason) =>
+{
+    switch (reason)
+    {
+        case Enter:
+        {
             setTimeout(CreateEnemy, 2000);
         } break;
 
@@ -123,7 +148,7 @@ RenderTest = (reason) =>
 
 // Start initial state
 CreateAudioContext();
-nextState = GameState;//RenderTest;//MainMenu;
+nextState = MainMenu;//RenderTest;//MainMenu;
 
 // DEBUG
 window.addEventListener("keydown", e =>
