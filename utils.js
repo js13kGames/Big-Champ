@@ -281,3 +281,46 @@ DrawHud = () =>
 
     DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#FFF", 0, "Arial", "Bold", "right", "center", 8);
 }
+
+let particles = [];
+let ParticleTypeHit = 0;
+SpawnParticle = (x, y, type) =>
+{
+    switch (type)
+    {
+        case ParticleTypeHit:
+        {
+            let randAngle = Math.random()*360;
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 2, vh: 2, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 2, vh: 2, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+        } break;
+    }
+}
+
+DrawParticles = () =>
+{
+    for (let i = 0; i < particles.length; ++i)
+    {
+        let p = particles[i];
+        PushMatrix(p.x, p.y, p.a);
+        let alpha = 1.0 - Math.min(Math.max(p.t / p.lifetime, 0.0), 1.0);
+        alpha = Math.min(Math.floor(alpha*16), 15);
+        let aValues = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+        let color = p.c + aValues[alpha];
+        DrawRect(0, 0, p.w, p.h, color);
+        PopMatrix();
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.a += p.va;
+        p.w += p.vw;
+        p.h += p.vh;
+
+        p.t++;
+        if (p.t >= p.lifetime)
+        {
+            particles.splice(i, 1);
+            --i;
+        }
+    }
+}

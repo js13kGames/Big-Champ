@@ -75,6 +75,7 @@ class Enemy
                 {
                     player.OnHit(this);
                     this.KillSelf();
+                    SpawnParticle(this.pos.x - Math.random()*20, this.pos.y - Math.random()*20, ParticleTypeHit);
                 }
             } break;
 
@@ -146,8 +147,6 @@ class Enemy
         {
             objs.splice(idx, 1);
         }
-
-        //CreateEnemy();
     }
 
     Draw()

@@ -94,6 +94,7 @@ GameState = (reason) =>
             DrawBackground();
             objs.forEach(o => o.Draw());
             DrawHud();
+            DrawParticles();
         } break;
     }
 }
@@ -130,6 +131,7 @@ GameOver = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
+            DrawParticles();
             
             if (gameOverState >= 2)
             {
@@ -169,7 +171,7 @@ RenderTest = (reason) =>
         case Enter:
         {
             player.Reset();
-            CreateEnemy();
+            objs.push(new Enemy_SlowRun());
             objs[1].pos.x = 600;
             objs[1].pos.y = 300;
             objs[1].SetAnim(EnemyAnimJump);
@@ -186,6 +188,8 @@ RenderTest = (reason) =>
                     player.state = PlayerStateIdle;
                 }
                 //player.OnHit();
+
+                SpawnParticle(gameWidth*0.5, gameHeight*0.5, ParticleTypeHit);
             }
             objs[1].Animate();
         } break;
@@ -195,6 +199,7 @@ RenderTest = (reason) =>
             DrawBackground();
             objs.forEach(o => o.Draw());
             DrawHud();
+            DrawParticles();
         } break;
     }
 }
