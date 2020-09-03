@@ -291,8 +291,8 @@ SpawnParticle = (x, y, type) =>
         case ParticleTypeHit:
         {
             let randAngle = Math.random()*360;
-            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 2, vh: 2, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
-            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 2, vh: 2, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
         } break;
     }
 }
