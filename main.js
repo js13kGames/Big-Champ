@@ -98,20 +98,27 @@ GameState = (reason) =>
     }
 }
 
+let gameOverState = 0;
+let gameOverTimer;
 GameOver = (reason) =>
 {
     switch (reason)
     {
         case Enter:
         {
-            touchDelay = 60;
             clearTimeout(enemyTimer);
+            gameOverState = 0;
+            gameOverTimer = setInterval(() => {if (gameOverState < 10) { gameOverState++; } }, 350);
+        } break;
+
+        case Exit:
+        {
+            clearInterval(gameOverTimer);
         } break;
 
         case Tick:
         {
-            touchDelay--;
-            if (touchDelay < 0 && touch.down)
+            if (gameOverState >= 8 && touch.down)
             {
                 nextState = MainMenu;
             }
@@ -123,10 +130,34 @@ GameOver = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
-            DrawHud();
-            DrawText("Game Over", gameWidth*0.5, gameHeight*0.3, 72, "#B00", 0, "Arial", "Bold", "center", "center", 12);
-            DrawText("Eliminations: " + player.score, gameWidth*0.5, gameHeight*0.4, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
-            DrawText("Best: " + player.score, gameWidth*0.5, gameHeight*0.48, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
+            
+            if (gameOverState >= 2)
+            {
+                DrawText("Game Over", gameWidth*0.5, gameHeight*0.3, 72, "#DB0000", 0, "Arial", "Bold", "center", "center", 12);
+            }
+
+            if (gameOverState >= 4)
+            {
+                DrawText("Eliminations: " + player.score, gameWidth*0.5, gameHeight*0.4, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
+            }
+
+            if (gameOverState >= 6)
+            {
+                let highScore = localStorage.getItem("bigchamp.highscore");
+                if (highScore == null)
+                {
+                    highScore = 0;
+                }
+                DrawText("Best: " + highScore, gameWidth*0.5, gameHeight*0.48, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
+            }
+            
+            if (gameOverState >= 8)
+            {
+                if (player.isHighScore)
+                {
+                    DrawText("New Best!", gameWidth*0.5, gameHeight*0.6, 36 + Math.abs(Math.sin(Date.now()*0.005))*10.0, "#04D84E", -10, "Arial", "Bold", "center", "center", 10);
+                }
+            }
         } break;
     }
 }

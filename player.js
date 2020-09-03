@@ -25,6 +25,7 @@ class Player
     {
         this.health = 3;
         this.score = 0;
+        this.isHighScore = false;
     }
 
     Tick()
@@ -144,6 +145,13 @@ class Player
         this.timer = 15;
         this.hitConfirm = true;
         this.score++;
+
+        let highScore = localStorage.getItem("bigchamp.highscore");
+        if (highScore == null || highScore < this.score)
+        {
+            localStorage.setItem("bigchamp.highscore", this.score);
+            this.isHighScore = true;
+        }
 
         zzfx(...[,,235,,,.12,,.15,-4.2,-6.7,,,,1.4,,.1,,.85,.04]); // Hit 87
 
