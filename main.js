@@ -21,7 +21,7 @@ TouchState = (reason) =>
 
         case Draw:
         {
-            DrawText("Tap To Start", gameWidth*0.5, gameHeight*0.5, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            DrawText("Tap", gameWidth*0.5, gameHeight*0.5, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
         } break;
     }
 }
@@ -33,6 +33,9 @@ MainMenu = (reason) =>
         case Enter:
         {
             isFrenzy = false;
+            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 0);
+            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 250);
+            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 500);
         } break;
 
         case Tick:
@@ -47,7 +50,23 @@ MainMenu = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
-            DrawText("Menu", gameWidth*0.5, gameHeight*0.3, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            let bounceIdx = Date.now() % 400;
+            let color = "#FF6A00";
+            if (bounceIdx < 75)
+            {
+                color = "#FFD800";
+            }
+            else if (bounceIdx < 150)
+            {
+                color = "#FFA000";
+            }
+            let size = 90 + Math.abs(Math.sin((bounceIdx / 400)*Math.PI))*1.5;
+            DrawText("Big Champ", gameWidth*0.5, gameHeight*0.3, size, "#FFF", 0, "Arial", "Bold", "center", "center", 20, color);
+            DrawText("Big Champ", gameWidth*0.5, gameHeight*0.3, size, "#FFF", 0, "Arial", "Bold", "center", "center", 12, "#000");
+            if (Date.now()%800 < 600)
+            {
+                DrawText("- Tap To Start -", gameWidth*0.5, gameHeight*0.5, 32, "#FFF", 0, "Arial", "Bold", "center", "center", 10);
+            }
         } break;
     }
 }

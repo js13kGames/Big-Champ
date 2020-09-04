@@ -122,7 +122,7 @@ DrawSprite = (image, x, y, xScale = 1.0, yScale = 1.0, angle = 0.0) =>
     ctx.restore();
 }
 
-DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName = "Arial", fontStyle = "", align = "left", baseline = "bottom", outlineWidth = 0) =>
+DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName = "Arial", fontStyle = "", align = "left", baseline = "bottom", outlineWidth = 0, outlineColor = "#000") =>
 {
     ctx.save();
     ctx.translate(x, y);
@@ -133,7 +133,7 @@ DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName =
     ctx.textBaseline = baseline;
     if (outlineWidth > 0)
     {
-        ctx.strokeStyle = "#000";
+        ctx.strokeStyle = outlineColor;
         ctx.lineWidth = outlineWidth;
         ctx.lineJoin = "round";
         ctx.strokeText(text, 0, 0);

@@ -151,7 +151,7 @@ class Enemy
 
     IsInBounceZone()
     {
-        return this.state == EnemyStateMoveToPlayer && this.pos.x <= this.bounceThreshold;
+        return this.state == EnemyStateMoveToPlayer && this.pos.x <= this.bounceThreshold + 20;
     }
 
     Draw()
