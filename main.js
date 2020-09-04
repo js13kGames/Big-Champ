@@ -114,7 +114,24 @@ GameOver = (reason) =>
         {
             clearTimeout(enemyTimer);
             gameOverState = 0;
-            gameOverTimer = setInterval(() => {if (gameOverState < 10) { gameOverState++; } }, 350);
+            gameOverTimer = setInterval(() =>
+            {
+                if (gameOverState < 10)
+                {
+                    gameOverState++;
+                    if (gameOverState == 2 || gameOverState == 4 || gameOverState == 6)
+                    {
+                        zzfx(...[,,1983,,,.06,,.53,-68,,,,,,9,.2]); // Blip 664
+                    }
+                    else if (gameOverState == 8 && player.isHighScore)
+                    {
+                        zzfx(...[,,703,.02,.03,.19,,.92,-8,,,,,,,.1,,.63,.07]); // Jump 813
+                        setTimeout(() => {zzfx(...[,,703,.02,.03,.19,,.92,-8,,,,,,,.1,,.63,.07]);}, 200);
+                        setTimeout(() => {zzfx(...[,,703,.02,.03,.19,,.92,-8,,,,,,,.1,,.63,.07]);}, 400);
+                        setTimeout(() => {zzfx(...[,,511,.31,.1,1.75,4,2.74,.6,.6,,,,.7,,.2,,.75,.09]);}, 600);
+                    }
+                }
+            }, 250);
         } break;
 
         case Exit:
