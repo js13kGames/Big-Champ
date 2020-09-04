@@ -48,7 +48,7 @@ class Player
                     this.Idle();
                 }
 
-                if (touch.down && this.hitConfirm && IsEnemyInBounceZone())
+                if (touch.lastDown <= 3 && this.hitConfirm && IsEnemyInBounceZone())
                 {
                     // re-animate belly bounce here...
                     this.BellyBounce();
@@ -57,29 +57,28 @@ class Player
 
             case PlayerStateHit:
             {
-                if (touch.down)
+                if (touch.lastDown <= 5 && this.health > 0 && IsEnemyInBounceZone())
                 {
-                    if (this.health > 0 && IsEnemyInBounceZone())
-                    {
                         this.BellyBounce();
-                    }
                 }
-
-                this.timer--;
-                if (this.timer == 0)
+                else
                 {
-                    if (this.health == 0)
+                    this.timer--;
+                    if (this.timer == 0)
                     {
-                        this.bellyOffset.x = 10;
-                        this.bellyOffset.y = 10;
-                        nextState = GameOver;
-                        this.state = PlayerStateDead;
+                        if (this.health == 0)
+                        {
+                            this.bellyOffset.x = 10;
+                            this.bellyOffset.y = 10;
+                            nextState = GameOver;
+                            this.state = PlayerStateDead;
 
-                        zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
-                    }
-                    else
-                    {
-                        this.Idle();
+                            zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
+                        }
+                        else
+                        {
+                            this.Idle();
+                        }
                     }
                 }
             } break;

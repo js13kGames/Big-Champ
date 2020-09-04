@@ -2,7 +2,7 @@ enemySpawnInfo = [];
 
 enemySpawnInfo.push({
     maxPlayerScore: 0,
-    possibleEnemyTypes: [5],
+    possibleEnemyTypes: [0],
     minSpawnCount: 1,
     maxSpawnCount: 1,
     minSpawnDelay: 0,
@@ -22,7 +22,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 6,
-    possibleEnemyTypes: [0,2,3],
+    possibleEnemyTypes: [0,2,3,4],
     minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 1.5,
@@ -32,7 +32,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 8,
-    possibleEnemyTypes: [4],
+    possibleEnemyTypes: [5],
     minSpawnCount: 1,
     maxSpawnCount: 1,
     minSpawnDelay: 0,
@@ -52,7 +52,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 20,
-    possibleEnemyTypes: [3,3,4,4],
+    possibleEnemyTypes: [3,3,4,4,6,8],
     minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 1.0,
@@ -72,7 +72,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 35,
-    possibleEnemyTypes: [1,2,3,4],
+    possibleEnemyTypes: [1,2,3,4,1,2,3,4,7,8,6],
     minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 0.4,
@@ -82,7 +82,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 50,
-    possibleEnemyTypes: [0,1,2,3,4],
+    possibleEnemyTypes: [0,1,2,3,4,0,1,2,3,4,0,1,2,3,4,5,7,9],
     minSpawnCount: 3,
     maxSpawnCount: 4,
     minSpawnDelay: 0.3,
@@ -92,7 +92,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 100,
-    possibleEnemyTypes: [0,1,2,3,4],
+    possibleEnemyTypes: [0,1,2,3,4,0,1,2,3,4,0,1,2,3,4,0,1,2,3,4,5,6,7,8,9],
     minSpawnCount: 4,
     maxSpawnCount: 6,
     minSpawnDelay: 0.25,
@@ -104,6 +104,8 @@ enemySpawnInfo.push({
 enemyIdxBag = [];
 lastSpawnInfoIdx = -1;
 testScore = -1;
+isFrenzy = false;
+frenzyCooldown = 0;
 CreateEnemy = () =>
 {
     // DEBUG
@@ -111,6 +113,8 @@ CreateEnemy = () =>
     // setTimeout(()=>{objs.push(new Enemy_SlowRun())}, 1500);
     // setTimeout(CreateEnemy, 6000);
     // return;
+
+    isFrenzy = false;
 
     for (let i = 0; i < enemySpawnInfo.length; ++i)
     {
@@ -137,10 +141,12 @@ CreateEnemy = () =>
             {
                 // Pick random enemy that hasn't already been chosen (in our bag)
                 let enemyIdx = -1;
+                let timeout = 100;
                 do
                 {
                     enemyIdx = Math.floor(Math.random()*es.possibleEnemyTypes.length);
-                } while (enemyIdxBag.includes(enemyIdx));
+                    --timeout;
+                } while ((enemyIdxBag.includes(enemyIdx) || (es.possibleEnemyTypes[enemyIdx] >= 5 && frenzyCooldown > 0)) && timeout > 0);
 
                 // Bag full = reset
                 enemyIdxBag.push(enemyIdx);
@@ -164,7 +170,52 @@ CreateEnemy = () =>
                             setTimeout(()=>{objs.push(new Enemy_SlowRun()); PlayEnemySpawnSFX(); }, 2000 + f*400);
                         }
                         c = spawnCount;
-                        spawnDelay = 6;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 6:
+                    {
+                        for (let f = 0; f < 7; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_LongJump()); PlayEnemySpawnSFX(); }, 2000 + f*400);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 7:
+                    {
+                        for (let f = 0; f < 7; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_SlowBounce()); PlayEnemySpawnSFX(); }, 2000 + f*400);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 8:
+                    {
+                        for (let f = 0; f < 8; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_FastRun()); PlayEnemySpawnSFX(); }, 2000 + f*300);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 9:
+                    {
+                        for (let f = 0; f < 6; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_DelayedAttack()); PlayEnemySpawnSFX(); }, 2000 + f*300);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
                     } break;
                 }
 
@@ -172,11 +223,19 @@ CreateEnemy = () =>
             }
 
             let nextDelay = es.minNextDelay + (Math.random()*(es.maxNextDelay - es.minNextDelay))
-            enemyTimer = setTimeout(CreateEnemy, (spawnDelay + nextDelay) * 1000);
-            
+            enemyTimer = setTimeout(CreateEnemy, (spawnDelay + nextDelay) * 1000);            
 
             break;
         }
+    }
+
+    if (isFrenzy)
+    {
+        frenzyCooldown = 5;
+    }
+    else
+    {
+        --frenzyCooldown;
     }
 }
 
@@ -303,6 +362,11 @@ DrawHud = () =>
     }
 
     DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#FFF", 0, "Arial", "Bold", "right", "center", 8);
+
+    if (isFrenzy)
+    {
+        DrawText("Frenzy!", gameWidth*0.5, gameHeight*0.2, 36 + Math.abs(Math.sin(Date.now()*0.0075))*10.0, "#FFD800", -2, "Arial", "Bold", "center", "center", 10);
+    }
 }
 
 let particles = [];

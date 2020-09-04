@@ -20,7 +20,7 @@ ctx = this.canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
 // Input (mouse/touch only!) --------------------------------------------------
-touch = { x: 0, y: 0, up: false, down: false, held: false}
+touch = { x: 0, y: 0, up: false, down: false, held: false, lastDown: 10000 }
 canvas.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; }, false);
 canvas.addEventListener("mouseup", e => { touch.up = true; touch.down = false; touch.held = false }, false);
 canvas.addEventListener("mousemove", e => { SetTouchPos(e); e.preventDefault(); }, false );
@@ -237,7 +237,15 @@ GameLoop = (curTime) =>
             state(Tick);
         }
 
-        // Clear per-frame input values
+        // Update/Clear per-frame input values
+        if (touch.down)
+        {
+            touch.lastDown = 1;
+        }
+        else
+        {
+            ++touch.lastDown;
+        }
         touch.up = false;
         touch.down = false;
     }
