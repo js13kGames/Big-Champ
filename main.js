@@ -30,6 +30,11 @@ MainMenu = (reason) =>
 {
     switch (reason)
     {
+        case Enter:
+        {
+            isFrenzy = false;
+        } break;
+
         case Tick:
         {
             if (touch.down)
