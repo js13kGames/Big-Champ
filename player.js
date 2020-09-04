@@ -48,7 +48,7 @@ class Player
                     this.Idle();
                 }
 
-                if (touch.down && this.hitConfirm)
+                if (touch.down && this.hitConfirm && IsEnemyInBounceZone())
                 {
                     // re-animate belly bounce here...
                     this.BellyBounce();
@@ -57,6 +57,14 @@ class Player
 
             case PlayerStateHit:
             {
+                if (touch.down)
+                {
+                    if (this.health > 0 && IsEnemyInBounceZone())
+                    {
+                        this.BellyBounce();
+                    }
+                }
+
                 this.timer--;
                 if (this.timer == 0)
                 {
@@ -137,13 +145,17 @@ class Player
     IsBellyBounceAttacking()
     {
         return (this.state == PlayerStateBelly) &&
-               ((this.timer >= BellyBounceTime - BellyBounceAttackTime) || (this.hitConfirm && this.timer >= 7));
+               ((this.timer >= BellyBounceTime - BellyBounceAttackTime));// || (this.hitConfirm && this.timer >= 7));
     }
 
     OnBounce(enemy)
     {
-        this.timer = 15;
+        //this.timer = 15;
         this.hitConfirm = true;
+        this.bellyOffset.xLast = 0;
+        this.bellyOffset.yLast = 0;
+        this.bellyOffset.x = 15;
+        this.bellyOffset.y = 15;
         this.score++;
 
         let highScore = localStorage.getItem("bigchamp.highscore");

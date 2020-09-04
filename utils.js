@@ -2,7 +2,7 @@ enemySpawnInfo = [];
 
 enemySpawnInfo.push({
     maxPlayerScore: 0,
-    possibleEnemyTypes: [0],
+    possibleEnemyTypes: [5],
     minSpawnCount: 1,
     maxSpawnCount: 1,
     minSpawnDelay: 0,
@@ -156,6 +156,16 @@ CreateEnemy = () =>
                     case 2: setTimeout(()=>{objs.push(new Enemy_DelayedAttack()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
                     case 3: setTimeout(()=>{objs.push(new Enemy_LongJump()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
                     case 4: setTimeout(()=>{objs.push(new Enemy_SlowBounce()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
+
+                    case 5:
+                    {
+                        for (let f = 0; f < 6; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_SlowRun()); PlayEnemySpawnSFX(); }, 2000 + f*400);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 6;
+                    } break;
                 }
 
                 spawnDelay += es.minSpawnDelay + (Math.random()*(es.maxSpawnDelay - es.minSpawnDelay))
@@ -168,6 +178,19 @@ CreateEnemy = () =>
             break;
         }
     }
+}
+
+IsEnemyInBounceZone = () =>
+{
+    for (let i = 1; i < objs.length; ++i)
+    {
+        if (objs[i].IsInBounceZone != undefined && objs[i].IsInBounceZone())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 PlayEnemySpawnSFX = () =>
