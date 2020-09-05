@@ -63,9 +63,10 @@ MainMenu = (reason) =>
             let size = 90 + Math.abs(Math.sin((bounceIdx / 400)*Math.PI))*1.5;
             DrawText("Big Champ", gameWidth*0.5, gameHeight*0.3, size, "#FFF", 0, "Arial", "Bold", "center", "center", 20, color);
             DrawText("Big Champ", gameWidth*0.5, gameHeight*0.3, size, "#FFF", 0, "Arial", "Bold", "center", "center", 12, "#000");
+            DrawText("Weighing in at 404 lbs!", gameWidth*0.5, gameHeight*0.45, 32, "#FFF", 0, "Arial", "Bold", "center", "center", 9, "#000");
             if (Date.now()%800 < 600)
             {
-                DrawText("- Tap To Start -", gameWidth*0.5, gameHeight*0.5, 32, "#FFF", 0, "Arial", "Bold", "center", "center", 10);
+                DrawText("- Tap To Start -", gameWidth*0.5, gameHeight*0.85, 32, "#FFD800", 0, "Arial", "Bold", "center", "center", 9);
             }
         } break;
     }
@@ -181,7 +182,7 @@ GameOver = (reason) =>
 
             if (gameOverState >= 4)
             {
-                DrawText("Eliminations: " + player.score, gameWidth*0.5, gameHeight*0.4, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
+                DrawText("Eliminations: " + player.score, gameWidth*0.5, gameHeight*0.42, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
             }
 
             if (gameOverState >= 6)
@@ -191,14 +192,14 @@ GameOver = (reason) =>
                 {
                     highScore = 0;
                 }
-                DrawText("Best: " + highScore, gameWidth*0.5, gameHeight*0.48, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
+                DrawText("Best: " + highScore, gameWidth*0.5, gameHeight*0.52, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
             }
             
             if (gameOverState >= 8)
             {
-                if (player.isHighScore)
+                //if (player.isHighScore)
                 {
-                    DrawText("New Best!", gameWidth*0.5, gameHeight*0.6, 36 + Math.abs(Math.sin(Date.now()*0.005))*10.0, "#04D84E", -10, "Arial", "Bold", "center", "center", 10);
+                    DrawText("New Best!", gameWidth*0.5, gameHeight*0.63, 36 + Math.abs(Math.sin(Date.now()*0.005))*10.0, "#04D84E", -10, "Arial", "Bold", "center", "center", 10);
                 }
             }
         } break;

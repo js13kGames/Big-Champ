@@ -370,7 +370,7 @@ DrawHud = () =>
 
     if (isFrenzy)
     {
-        DrawText("Frenzy!", gameWidth*0.5, gameHeight*0.2, 36 + Math.abs(Math.sin(Date.now()*0.0075))*10.0, "#FFD800", -2, "Arial", "Bold", "center", "center", 10);
+        DrawText("Wrestler Rush!", gameWidth*0.5, gameHeight*0.2, 36 + Math.abs(Math.sin(Date.now()*0.0075))*10.0, "#FFD800", -2, "Arial", "Bold", "center", "center", 10);
     }
 }
 
