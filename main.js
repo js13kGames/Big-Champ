@@ -14,7 +14,6 @@ TouchState = (reason) =>
         {
             if (touch.down)
             {
-                CreateAudioContext();
                 nextState = MainMenu;
             }
         } break;
@@ -197,7 +196,7 @@ GameOver = (reason) =>
             
             if (gameOverState >= 8)
             {
-                //if (player.isHighScore)
+                if (player.isHighScore)
                 {
                     DrawText("New Best!", gameWidth*0.5, gameHeight*0.63, 36 + Math.abs(Math.sin(Date.now()*0.005))*10.0, "#04D84E", -10, "Arial", "Bold", "center", "center", 10);
                 }
