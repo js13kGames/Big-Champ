@@ -2,6 +2,7 @@ REM Remove pervious build files
 del build\*.js /q
 del build\*.map /q
 del build\*.zip /q
+copy ZzFX.min.js build\ZzFX.min.js
 
 REM Concatenate all JS into single file
 type tk.js utils.js player.js enemy.js enemy_SlowRun.js enemy_FastRun.js enemy_SlowBounce.js enemy_DelayedAttack.js enemy_LongJump.js main.js > build\game.js

@@ -11,62 +11,23 @@ let Rad2Deg = 180.0/Math.PI;
 
 // Initialization -------------------------------------------------------------
 let canvas = document.getElementById("canvas");
-// let canvas = document.createElement("canvas");
-// canvas.setAttribute("width", gameWidth);
-// canvas.setAttribute("height", gameHeight);
-// canvas.style.width = `${gameWidth * gameScale}px`;
-// canvas.style.height = `${gameHeight * gameScale}px`;
-//canvas.style.backgroundColor = "#FFFFFFFF";
-//canvas.style.imageRendering = "pixelated";
-//document.getElementById("game").appendChild(canvas);
 let ctx = canvas.getContext('2d');
-//ctx.imageSmoothingEnabled = false;
 
 // Input (mouse/touch only!) --------------------------------------------------
 let touch = {x: 0, y: 0, up: false, down: false, held: false, lastDown: 10000}
-window.addEventListener("mousedown", e => {touch.up = false, touch.down = true; touch.held = true;});
-window.addEventListener("mouseup", e => {touch.up = true; touch.down = false; touch.held = false;});
-//window.addEventListener("mousemove", e => { SetTouchPos(e); e.preventDefault(); }, false );
-window.addEventListener("touchstart", e => {touch.up = false; touch.down = true; touch.held = true;});
-window.addEventListener("touchend", e => {touch.up = true; touch.down = false; touch.held = false;});
-window.addEventListener("touchcancel", e => {touch.up = true; touch.down = false; touch.held = false;});
-//window.addEventListener("touchmove", e => { SetTouchPos(e.touches[0]); e.preventDefault(); }, false );
-// let SetTouchPos = (e) =>
-// {
-//     touch.x = (e.pageX - canvas.offsetLeft) / gameScale;
-//     touch.y = (e.pageY - canvas.offsetTop) / gameScale;
-// }
-document.documentElement.addEventListener(
-    "touchstart", function(){
-        if (ZZFX.x.state !== 'running') {
-        ZZFX.x.resume();
-    }});
+window.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; e.preventDefault(); });
+window.addEventListener("mouseup", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); });
+window.addEventListener("touchstart", e => { touch.up = false; touch.down = true; touch.held = true; e.preventDefault(); });
+window.addEventListener("touchend", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); });
+window.addEventListener("touchcancel", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); });
 
-document.documentElement.addEventListener(
-    "mousedown", function(){
-        if (ZZFX.x.state !== 'running') {
-        ZZFX.x.resume();
-    }});
+// Audio (restart Zzfx audio context on user input) ---------------------------
+document.documentElement.addEventListener("mousedown", () => { if (ZZFX.x.state !== 'running') {ZZFX.x.resume();} });
+document.documentElement.addEventListener("touchstart", () => { if (ZZFX.x.state !== 'running') {ZZFX.x.resume();} });
 
 // Rendering ------------------------------------------------------------------
-let PushMatrix = (x, y, angle = 0) =>
-{
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle * Deg2Rad);
-}
-
-let PopMatrix = () =>
-{
-    ctx.restore();
-}
-
-let LoadSprite = (name) =>
-{
-    sprite = new Image();
-    sprite.src = name;
-    return sprite;
-}
+let PushMatrix = (x, y, angle = 0) => { ctx.save(); ctx.translate(x, y); ctx.rotate(angle * Deg2Rad); }
+let PopMatrix = () => { ctx.restore(); }
 
 let DrawLine = (x1, y1, x2, y2, color, width = 1.0) =>
 {
@@ -124,18 +85,6 @@ let DrawCircle = (x, y, radius, color, startAngle = 0, endAngle = 2*Math.PI) =>
     ctx.restore();
 }
 
-let DrawSprite = (image, x, y, xScale = 1.0, yScale = 1.0, angle = 0.0) =>
-{
-    let w = image.width * xScale;
-    let h = image.height * yScale;
-
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle * Deg2Rad);
-    ctx.drawImage(image, -w*0.5, -h*0.5, w, h);
-    ctx.restore();
-}
-
 let DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName = "Arial", fontStyle = "", align = "left", baseline = "bottom", outlineWidth = 0, outlineColor = "#000") =>
 {
     ctx.save();
@@ -167,46 +116,16 @@ class V2
     SubV(v) { this.x -= v.x; this.y -= v.y }
     MulS(s) { this.x *= s; this.y *= s; }
     DivS(s) { this.x /= s; this.y /= s; }
-    DistTo(v)
-    {
-        return Math.sqrt(this.DistToSq(v));
-    }
-    DistToSq(v)
-    {
-        let dx = this.x - v.x;
-        let dy = this.y - v.y;
-        return dx*dx + dy*dy;
-    }
-    Len()
-    {
-        return Math.sqrt(this.LenSq());
-    }
-    LenSq()
-    {
-       return this.x*this.x + this.y*this.y; 
-    }
-    Normalize()
-    {
-        let len = this.Len();
-        this.x /= len;
-        this.y /= len;
-    }
-    ClampMax(maxLen)
-    {
-        let lenSq = this.LenSq();
-        if (lenSq > maxLen*maxLen)
-        {
-            let len = Math.sqrt(lenSq);
-            this.x = (this.x / len) * maxLen;
-            this.y = (this.y / len) * maxLen;
-        }
-    }
+    DistTo(v) { return Math.sqrt(this.DistToSq(v)); }
+    DistToSq(v) { let dx = this.x - v.x; let dy = this.y - v.y; return dx*dx + dy*dy; }
+    Len() { return Math.sqrt(this.LenSq()); }
+    LenSq() { return this.x*this.x + this.y*this.y; }
+    Normalize() { let len = this.Len(); this.x /= len; this.y /= len; }
 }
 
-
 // Main loop + State management -----------------------------------------------
-let state = null;
-let nextState = null;
+let tkState = null;
+let tkNextState = null;
 let Enter = 0; let Tick = 1; let Draw = 2; let Exit = 3;
 let clearColor = "#1A1A1AFF";
 let gameLoopFixedTimeStep = 1/60;
@@ -216,39 +135,35 @@ let GameLoop = (curTime) =>
 {
     window.requestAnimationFrame(GameLoop);
 
+    // Mobile screen size adjustments
     FitToScreen();
 
     let deltaTime = Math.min((curTime - (previousGameLoopTime || curTime)) / 1000.0, 0.2);  // Cap to 200ms (5fps)
     gameLoopFrameTimeAccum += deltaTime;
 
+    // Fixed tick
     while (gameLoopFrameTimeAccum > gameLoopFixedTimeStep)
     {
         gameLoopFrameTimeAccum -= gameLoopFixedTimeStep;
 
         // Switch states?
-        if (nextState != null)
+        if (tkNextState != null)
         {
-            if (state != null) { state(Exit); }
-            state = nextState;
-            nextState = null;
-            if (state != null) { state(Enter); }
+            if (tkState != null) { tkState(Exit); }
+            tkState = tkNextState;
+            tkNextState = null;
+            if (tkState != null) { tkState(Enter); }
         }
 
         // Tick state
-        if (state)
+        if (tkState)
         {
-            state(Tick);
+            tkState(Tick);
         }
 
         // Update/Clear per-frame input values
-        if (touch.down)
-        {
-            touch.lastDown = 1;
-        }
-        else
-        {
-            ++touch.lastDown;
-        }
+        if (touch.down) { touch.lastDown = 1; }
+        else { ++touch.lastDown; }
         touch.up = false;
         touch.down = false;
     }
@@ -259,9 +174,9 @@ let GameLoop = (curTime) =>
     ctx.fill();
 
     // Draw state
-    if (state)
+    if (tkState)
     {
-        state(Draw);
+        tkState(Draw);
     }
 
     previousGameLoopTime = curTime;
@@ -271,18 +186,17 @@ let actualWidth = -1;
 let actualHeight = -1;
 let FitToScreen = () =>
 {
+    // Calculate desired screen size
     let aspectRatio = canvas.width / canvas.height;
     let newWidth = window.innerWidth;
     let newHeight = window.innerWidth / aspectRatio;
-
-    //console.log(window.innerWidth + "x" + window.innerHeight);
-
     if (newHeight > window.innerHeight)
     {
         newHeight = window.innerHeight;
         newWidth = newHeight * aspectRatio;
     }
 
+    // Apply it
     if (newWidth !== actualWidth || newHeight !== actualHeight)
     {
         canvas.style.width = newWidth+"px";
@@ -290,10 +204,9 @@ let FitToScreen = () =>
 
         actualWidth = newWidth;
         actualHeight = newHeight;
-
-        //console.log("newWidth" + newWidth + " actualWidth: " + actualWidth);
     }
 
+    // Keep window scrolled to the top
     window.scrollTo(0, 0);
 }
 
@@ -312,24 +225,24 @@ enemySpawnInfo.push({
     maxNextDelay: 2.5,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 3,
+    maxPlayerScore: 2,
     possibleEnemyTypes: [0,1,2],
     minSpawnCount: 1,
     maxSpawnCount: 1,
     minSpawnDelay: 0,
     maxSpawnDelay: 0,
-    minNextDelay: 2.0,
-    maxNextDelay: 2.0,
+    minNextDelay: 1.75,
+    maxNextDelay: 1.75,
 });
 enemySpawnInfo.push({
     maxPlayerScore: 6,
     possibleEnemyTypes: [0,2,3,4],
     minSpawnCount: 2,
     maxSpawnCount: 2,
-    minSpawnDelay: 1.5,
-    maxSpawnDelay: 2.0,
+    minSpawnDelay: 0.25,
+    maxSpawnDelay: 0.5,
     minNextDelay: 1.25,
-    maxNextDelay: 1.5,
+    maxNextDelay: 1.25,
 });
 enemySpawnInfo.push({
     maxPlayerScore: 8,
@@ -402,6 +315,7 @@ enemySpawnInfo.push({
     maxNextDelay: 1.2,
 });
 
+let enemyTimer;
 let enemyIdxBag = [];
 let lastSpawnInfoIdx = -1;
 let testScore = -1;
@@ -677,6 +591,7 @@ let DrawHud = () =>
 
 let particles = [];
 let ParticleTypeHit = 0;
+let ParticleTypeDizzy = 1;
 let SpawnParticle = (x, y, type) =>
 {
     switch (type)
@@ -686,6 +601,13 @@ let SpawnParticle = (x, y, type) =>
             let randAngle = Math.random()*360;
             particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
             particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+        } break;
+
+        case ParticleTypeDizzy:
+        {
+            let randAngle = Math.random()*360;
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 10, h: 10, vw: 2, vh: 2, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 10, h: 10, vw: 2, vh: 2, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
         } break;
     }
 }
@@ -736,6 +658,7 @@ class Player
         this.bellyOffset = new V2(0, 0);
         this.bellyOffset.xLast = 0;
         this.bellyOffset.yLast = 0;
+        this.dizzyVFXTimer = undefined;
 
         this.Reset();
     }
@@ -745,6 +668,7 @@ class Player
         this.health = 3;
         this.score = 0;
         this.isHighScore = false;
+        clearInterval(this.dizzyVFXTimer);
     }
 
     Tick()
@@ -753,7 +677,7 @@ class Player
         {
             case PlayerStateIdle:
             {
-                if (touch.down && state != RenderTest)
+                if (touch.down && tkState != RenderTest)
                 {
                     this.BellyBounce();
                 }
@@ -789,8 +713,9 @@ class Player
                         {
                             this.bellyOffset.x = 10;
                             this.bellyOffset.y = 10;
-                            nextState = GameOver;
+                            tkNextState = GameOver;
                             this.state = PlayerStateDead;
+                            //this.dizzyVFXTimer = setInterval(() => SpawnParticle(this.pos.x, this.pos.y), 1000);
 
                             zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
                         }
@@ -804,6 +729,7 @@ class Player
 
             case PlayerStateDead:
             {
+
             } break;
 
             case PlayerStateIntro:
@@ -1125,7 +1051,7 @@ class Enemy
         this.state = EnemyStateMoveToPlayer;
         this.angle = 0;
         this.color = "000";
-        this.bounceThreshold = player.pos.x + 85;
+        this.bounceThreshold = player.pos.x + 90;
         this.damageThreshold = player.pos.x - 0;
         this.bounceOffAngleAdj = 0;
 
@@ -1668,9 +1594,6 @@ let player = new Player();
 let objs = [];
 objs.push(player);
 
-let enemyTimer;
-let touchDelay;
-
 let TouchState = (reason) =>
 {
     switch (reason)
@@ -1679,8 +1602,7 @@ let TouchState = (reason) =>
         {
             if (touch.down)
             {
-                nextState = MainMenu;
-                //zzfx(...[,,511,.31,.1,1.75,4,2.74,.6,.6,,,,.7,,.2,,.75,.09]);
+                tkNextState = MainMenu;
             }
         } break;
 
@@ -1707,7 +1629,7 @@ let MainMenu = (reason) =>
         {
             if (touch.down)
             {
-                nextState = IntroState;
+                tkNextState = IntroState;
             }
         } break;
 
@@ -1752,7 +1674,7 @@ let IntroState = (reason) =>
             objs.forEach(o => o.Tick());
             if (player.state == PlayerStateIdle)
             {
-                nextState = GameState
+                tkNextState = GameState
             }
         } break;
 
@@ -1828,7 +1750,7 @@ let GameOver = (reason) =>
         {
             if (gameOverState >= 8 && touch.down)
             {
-                nextState = MainMenu;
+                tkNextState = MainMenu;
             }
 
             objs.forEach(o => o.Tick());
@@ -1912,4 +1834,4 @@ let RenderTest = (reason) =>
 }
 
 // Start initial state
-nextState = TouchState;//RenderTest;//MainMenu;
+tkNextState = TouchState;//RenderTest;//MainMenu;
