@@ -8,16 +8,17 @@ Deg2Rad = Math.PI/180.0;
 Rad2Deg = 180.0/Math.PI;
 
 // Initialization -------------------------------------------------------------
-canvas = document.createElement("canvas");
-canvas.setAttribute("width", gameWidth);
-canvas.setAttribute("height", gameHeight);
-canvas.style.width = `${gameWidth * gameScale}px`;
-canvas.style.height = `${gameHeight * gameScale}px`;
+//canvas = document.createElement("canvas");
+let canvas = document.getElementById("canvas");
+// canvas.setAttribute("width", gameWidth);
+// canvas.setAttribute("height", gameHeight);
+// canvas.style.width = `${gameWidth * gameScale}px`;
+// canvas.style.height = `${gameHeight * gameScale}px`;
 //canvas.style.backgroundColor = "#FFFFFFFF";
 //canvas.style.imageRendering = "pixelated";
-document.getElementById("game").appendChild(canvas);
-ctx = this.canvas.getContext('2d');
-ctx.imageSmoothingEnabled = false;
+//document.getElementById("game").appendChild(canvas);
+ctx = canvas.getContext('2d');
+//ctx.imageSmoothingEnabled = false;
 
 // Input (mouse/touch only!) --------------------------------------------------
 touch = { x: 0, y: 0, up: false, down: false, held: false, lastDown: 10000 }
@@ -215,6 +216,8 @@ GameLoop = (curTime) =>
 {
     window.requestAnimationFrame(GameLoop);
 
+    FitToScreen();
+
     let deltaTime = Math.min((curTime - (previousGameLoopTime || curTime)) / 1000.0, 0.2);  // Cap to 200ms (5fps)
     gameLoopFrameTimeAccum += deltaTime;
 
@@ -262,6 +265,32 @@ GameLoop = (curTime) =>
     }
 
     previousGameLoopTime = curTime;
+}
+
+let actualWidth = -1;
+let actualHeight = -1;
+FitToScreen = () =>
+{
+    let aspectRatio = canvas.width / canvas.height;
+    let newWidth = window.innerWidth;
+    let newHeight = window.innerWidth / aspectRatio;
+
+    if (newHeight > window.innerHeight)
+    {
+        newHeight = window.innerHeight;
+        newWidth = newHeight * aspectRatio;
+    }
+
+    if (newWidth !== actualWidth || newHeight !== actualHeight)
+    {
+        canvas.style.width = newWidth+"px";
+        canvas.style.height = newHeight+"px";
+
+        actualWidth = newWidth;
+        actualHeight = newHeight;
+    }
+
+    window.scrollTo(0, 0);
 }
 
 // Start it up!
