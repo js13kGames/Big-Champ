@@ -34,7 +34,7 @@ class Player
         {
             case PlayerStateIdle:
             {
-                if (touch.down && state != RenderTest)
+                if (touch.down && tkState != RenderTest)
                 {
                     this.BellyBounce();
                 }
@@ -70,7 +70,7 @@ class Player
                         {
                             this.bellyOffset.x = 10;
                             this.bellyOffset.y = 10;
-                            nextState = GameOver;
+                            tkNextState = GameOver;
                             this.state = PlayerStateDead;
 
                             zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68

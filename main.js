@@ -14,7 +14,7 @@ TouchState = (reason) =>
         {
             if (touch.down)
             {
-                nextState = MainMenu;
+                tkNextState = MainMenu;
             }
         } break;
 
@@ -41,7 +41,7 @@ MainMenu = (reason) =>
         {
             if (touch.down)
             {
-                nextState = IntroState;
+                tkNextState = IntroState;
             }
         } break;
 
@@ -86,7 +86,7 @@ IntroState = (reason) =>
             objs.forEach(o => o.Tick());
             if (player.state == PlayerStateIdle)
             {
-                nextState = GameState
+                tkNextState = GameState
             }
         } break;
 
@@ -162,7 +162,7 @@ GameOver = (reason) =>
         {
             if (gameOverState >= 8 && touch.down)
             {
-                nextState = MainMenu;
+                tkNextState = MainMenu;
             }
 
             objs.forEach(o => o.Tick());
@@ -246,7 +246,7 @@ RenderTest = (reason) =>
 }
 
 // Start initial state
-nextState = TouchState;//RenderTest;//MainMenu;
+tkNextState = TouchState;//RenderTest;//MainMenu;
 
 // DEBUG
 window.addEventListener("keydown", e =>
