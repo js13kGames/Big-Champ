@@ -3,10 +3,7 @@ let player = new Player();
 let objs = [];
 objs.push(player);
 
-let enemyTimer;
-let touchDelay;
-
-TouchState = (reason) =>
+let TouchState = (reason) =>
 {
     switch (reason)
     {
@@ -25,7 +22,7 @@ TouchState = (reason) =>
     }
 }
 
-MainMenu = (reason) =>
+let MainMenu = (reason) =>
 {
     switch (reason)
     {
@@ -71,7 +68,7 @@ MainMenu = (reason) =>
     }
 }
 
-IntroState = (reason) =>
+let IntroState = (reason) =>
 {
     switch (reason)
     {
@@ -99,7 +96,7 @@ IntroState = (reason) =>
     }
 }
 
-GameState = (reason) =>
+let GameState = (reason) =>
 {
     switch (reason)
     {
@@ -125,7 +122,7 @@ GameState = (reason) =>
 
 let gameOverState = 0;
 let gameOverTimer;
-GameOver = (reason) =>
+let GameOver = (reason) =>
 {
     switch (reason)
     {
@@ -205,7 +202,7 @@ GameOver = (reason) =>
     }
 }
 
-RenderTest = (reason) =>
+let RenderTest = (reason) =>
 {
     switch (reason)
     {
@@ -247,13 +244,3 @@ RenderTest = (reason) =>
 
 // Start initial state
 tkNextState = TouchState;//RenderTest;//MainMenu;
-
-// DEBUG
-window.addEventListener("keydown", e =>
-{
-    let keyName = e.key.toLowerCase();
-    if (keyName == "e")
-    {
-        CreateEnemy();
-    }
-});

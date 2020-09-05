@@ -1,4 +1,4 @@
-enemySpawnInfo = [];
+let enemySpawnInfo = [];
 
 enemySpawnInfo.push({
     maxPlayerScore: 0,
@@ -11,24 +11,24 @@ enemySpawnInfo.push({
     maxNextDelay: 2.5,
 });
 enemySpawnInfo.push({
-    maxPlayerScore: 3,
+    maxPlayerScore: 2,
     possibleEnemyTypes: [0,1,2],
     minSpawnCount: 1,
     maxSpawnCount: 1,
     minSpawnDelay: 0,
     maxSpawnDelay: 0,
-    minNextDelay: 2.0,
-    maxNextDelay: 2.0,
+    minNextDelay: 1.75,
+    maxNextDelay: 1.75,
 });
 enemySpawnInfo.push({
     maxPlayerScore: 6,
     possibleEnemyTypes: [0,2,3,4],
     minSpawnCount: 2,
     maxSpawnCount: 2,
-    minSpawnDelay: 1.5,
-    maxSpawnDelay: 2.0,
+    minSpawnDelay: 0.25,
+    maxSpawnDelay: 0.5,
     minNextDelay: 1.25,
-    maxNextDelay: 1.5,
+    maxNextDelay: 1.25,
 });
 enemySpawnInfo.push({
     maxPlayerScore: 8,
@@ -101,12 +101,13 @@ enemySpawnInfo.push({
     maxNextDelay: 1.2,
 });
 
-enemyIdxBag = [];
-lastSpawnInfoIdx = -1;
-testScore = -1;
-isFrenzy = false;
-frenzyCooldown = 0;
-CreateEnemy = () =>
+let enemyTimer;
+let enemyIdxBag = [];
+let lastSpawnInfoIdx = -1;
+let testScore = -1;
+let isFrenzy = false;
+let frenzyCooldown = 0;
+let CreateEnemy = () =>
 {
     // DEBUG
     // setTimeout(()=>{objs.push(new Enemy_DelayedAttack())}, 1000);
@@ -244,7 +245,7 @@ CreateEnemy = () =>
     }
 }
 
-IsEnemyInBounceZone = () =>
+let IsEnemyInBounceZone = () =>
 {
     for (let i = 1; i < objs.length; ++i)
     {
@@ -257,13 +258,13 @@ IsEnemyInBounceZone = () =>
     return false;
 }
 
-PlayEnemySpawnSFX = () =>
+let PlayEnemySpawnSFX = () =>
 {
     zzfx(...[,,90,.01,,.09,,2.92,,-43,53,.01,.01,,,,,.74,.02]); // Blip 167
 }
 
-crowd = [];
-crowdColors = ["#331C16", "#400101", "#2A110A", "#28251E", "#152833", "#333015", "#06280D"];
+let crowd = [];
+let crowdColors = ["#331C16", "#400101", "#2A110A", "#28251E", "#152833", "#333015", "#06280D"];
 for (let i = 0; i < 300; ++i)
 {
     crowd.push(
@@ -275,9 +276,9 @@ for (let i = 0; i < 300; ++i)
         spd: Math.random()*0.003
     });
 }
-flashes = [];
-nextFlashTime = Math.floor(Math.random()*100);
-DrawCrowd = () =>
+let flashes = [];
+let nextFlashTime = Math.floor(Math.random()*100);
+let DrawCrowd = () =>
 {
     crowd.forEach(c =>
     {
@@ -308,7 +309,7 @@ DrawCrowd = () =>
     }
 }
 
-DrawBackground = () =>
+let DrawBackground = () =>
 {
     let ropeWidth = 15;
 
@@ -358,7 +359,7 @@ DrawBackground = () =>
     PopMatrix();
 }
 
-DrawHud = () =>
+let DrawHud = () =>
 {
     for (let i = 0; i < 3; ++i)
     {
@@ -376,7 +377,8 @@ DrawHud = () =>
 
 let particles = [];
 let ParticleTypeHit = 0;
-SpawnParticle = (x, y, type) =>
+let ParticleTypeDizzy = 1;
+let SpawnParticle = (x, y, type) =>
 {
     switch (type)
     {
@@ -386,10 +388,17 @@ SpawnParticle = (x, y, type) =>
             particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
             particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
         } break;
+
+        case ParticleTypeDizzy:
+        {
+            let randAngle = Math.random()*360;
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 10, h: 10, vw: 2, vh: 2, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 10, h: 10, vw: 2, vh: 2, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+        } break;
     }
 }
 
-DrawParticles = () =>
+let DrawParticles = () =>
 {
     for (let i = 0; i < particles.length; ++i)
     {

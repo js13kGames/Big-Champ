@@ -35,7 +35,7 @@ class Enemy
         this.state = EnemyStateMoveToPlayer;
         this.angle = 0;
         this.color = "000";
-        this.bounceThreshold = player.pos.x + 85;
+        this.bounceThreshold = player.pos.x + 90;
         this.damageThreshold = player.pos.x - 0;
         this.bounceOffAngleAdj = 0;
 
