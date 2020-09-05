@@ -20,7 +20,7 @@ ctx = this.canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
 // Input (mouse/touch only!) --------------------------------------------------
-touch = { x: 0, y: 0, up: false, down: false, held: false}
+touch = { x: 0, y: 0, up: false, down: false, held: false, lastDown: 10000 }
 canvas.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; }, false);
 canvas.addEventListener("mouseup", e => { touch.up = true; touch.down = false; touch.held = false }, false);
 canvas.addEventListener("mousemove", e => { SetTouchPos(e); e.preventDefault(); }, false );
@@ -122,7 +122,7 @@ DrawSprite = (image, x, y, xScale = 1.0, yScale = 1.0, angle = 0.0) =>
     ctx.restore();
 }
 
-DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName = "Arial", fontStyle = "", align = "left", baseline = "bottom", outlineWidth = 0) =>
+DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName = "Arial", fontStyle = "", align = "left", baseline = "bottom", outlineWidth = 0, outlineColor = "#000") =>
 {
     ctx.save();
     ctx.translate(x, y);
@@ -133,7 +133,7 @@ DrawText = (text, x, y, fontSize = 12, fillStyle = "#FFF", angle = 0, fontName =
     ctx.textBaseline = baseline;
     if (outlineWidth > 0)
     {
-        ctx.strokeStyle = "#000";
+        ctx.strokeStyle = outlineColor;
         ctx.lineWidth = outlineWidth;
         ctx.lineJoin = "round";
         ctx.strokeText(text, 0, 0);
@@ -237,7 +237,15 @@ GameLoop = (curTime) =>
             state(Tick);
         }
 
-        // Clear per-frame input values
+        // Update/Clear per-frame input values
+        if (touch.down)
+        {
+            touch.lastDown = 1;
+        }
+        else
+        {
+            ++touch.lastDown;
+        }
         touch.up = false;
         touch.down = false;
     }
@@ -282,7 +290,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 6,
-    possibleEnemyTypes: [0,2,3],
+    possibleEnemyTypes: [0,2,3,4],
     minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 1.5,
@@ -292,7 +300,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 8,
-    possibleEnemyTypes: [4],
+    possibleEnemyTypes: [5],
     minSpawnCount: 1,
     maxSpawnCount: 1,
     minSpawnDelay: 0,
@@ -312,7 +320,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 20,
-    possibleEnemyTypes: [3,3,4,4],
+    possibleEnemyTypes: [3,3,4,4,6,8],
     minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 1.0,
@@ -332,7 +340,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 35,
-    possibleEnemyTypes: [1,2,3,4],
+    possibleEnemyTypes: [1,2,3,4,1,2,3,4,7,8,6],
     minSpawnCount: 2,
     maxSpawnCount: 2,
     minSpawnDelay: 0.4,
@@ -342,7 +350,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 50,
-    possibleEnemyTypes: [0,1,2,3,4],
+    possibleEnemyTypes: [0,1,2,3,4,0,1,2,3,4,0,1,2,3,4,5,7,9],
     minSpawnCount: 3,
     maxSpawnCount: 4,
     minSpawnDelay: 0.3,
@@ -352,7 +360,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 100,
-    possibleEnemyTypes: [0,1,2,3,4],
+    possibleEnemyTypes: [0,1,2,3,4,0,1,2,3,4,0,1,2,3,4,0,1,2,3,4,5,6,7,8,9],
     minSpawnCount: 4,
     maxSpawnCount: 6,
     minSpawnDelay: 0.25,
@@ -364,6 +372,8 @@ enemySpawnInfo.push({
 enemyIdxBag = [];
 lastSpawnInfoIdx = -1;
 testScore = -1;
+isFrenzy = false;
+frenzyCooldown = 0;
 CreateEnemy = () =>
 {
     // DEBUG
@@ -371,6 +381,8 @@ CreateEnemy = () =>
     // setTimeout(()=>{objs.push(new Enemy_SlowRun())}, 1500);
     // setTimeout(CreateEnemy, 6000);
     // return;
+
+    isFrenzy = false;
 
     for (let i = 0; i < enemySpawnInfo.length; ++i)
     {
@@ -397,10 +409,12 @@ CreateEnemy = () =>
             {
                 // Pick random enemy that hasn't already been chosen (in our bag)
                 let enemyIdx = -1;
+                let timeout = 100;
                 do
                 {
                     enemyIdx = Math.floor(Math.random()*es.possibleEnemyTypes.length);
-                } while (enemyIdxBag.includes(enemyIdx));
+                    --timeout;
+                } while ((enemyIdxBag.includes(enemyIdx) || (es.possibleEnemyTypes[enemyIdx] >= 5 && frenzyCooldown > 0)) && timeout > 0);
 
                 // Bag full = reset
                 enemyIdxBag.push(enemyIdx);
@@ -416,18 +430,99 @@ CreateEnemy = () =>
                     case 2: setTimeout(()=>{objs.push(new Enemy_DelayedAttack()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
                     case 3: setTimeout(()=>{objs.push(new Enemy_LongJump()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
                     case 4: setTimeout(()=>{objs.push(new Enemy_SlowBounce()); PlayEnemySpawnSFX(); }, spawnDelay * 1000); break;
+
+                    case 5:
+                    {
+                        for (let f = 0; f < 6; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_SlowRun()); PlayEnemySpawnSFX(); }, 2000 + f*400);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 6:
+                    {
+                        for (let f = 0; f < 7; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_LongJump()); PlayEnemySpawnSFX(); }, 2000 + f*400);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 7:
+                    {
+                        for (let f = 0; f < 7; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_SlowBounce()); PlayEnemySpawnSFX(); }, 2000 + f*400);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 8:
+                    {
+                        for (let f = 0; f < 8; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_FastRun()); PlayEnemySpawnSFX(); }, 2000 + f*300);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
+
+                    case 9:
+                    {
+                        for (let f = 0; f < 6; ++f)
+                        {
+                            setTimeout(()=>{objs.push(new Enemy_DelayedAttack()); PlayEnemySpawnSFX(); }, 2000 + f*300);
+                        }
+                        c = spawnCount;
+                        spawnDelay = 5;
+                        isFrenzy = true;
+                    } break;
                 }
 
                 spawnDelay += es.minSpawnDelay + (Math.random()*(es.maxSpawnDelay - es.minSpawnDelay))
             }
 
             let nextDelay = es.minNextDelay + (Math.random()*(es.maxNextDelay - es.minNextDelay))
-            enemyTimer = setTimeout(CreateEnemy, (spawnDelay + nextDelay) * 1000);
-            
+            enemyTimer = setTimeout(CreateEnemy, (spawnDelay + nextDelay) * 1000);            
 
             break;
         }
     }
+
+    if (isFrenzy)
+    {
+        frenzyCooldown = 5;
+
+        setTimeout(()=>{zzfx(...[,,71,.04,.04,.25,2,1.53,1.1,,,,,,,.1,,.99])}, 0);
+        setTimeout(()=>{zzfx(...[,,71,.04,.04,.25,2,1.53,1.1,,,,,,,.1,,.99])}, 300);
+        setTimeout(()=>{zzfx(...[,,71,.04,.04,.25,2,1.53,1.1,,,,,,,.1,,.99])}, 600);
+        setTimeout(()=>{zzfx(...[,,71,.04,.04,.25,2,1.53,1.1,,,,,,,.1,,.99])}, 900);
+    }
+    else
+    {
+        --frenzyCooldown;
+    }
+}
+
+IsEnemyInBounceZone = () =>
+{
+    for (let i = 1; i < objs.length; ++i)
+    {
+        if (objs[i].IsInBounceZone != undefined && objs[i].IsInBounceZone())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 PlayEnemySpawnSFX = () =>
@@ -540,6 +635,54 @@ DrawHud = () =>
     }
 
     DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#FFF", 0, "Arial", "Bold", "right", "center", 8);
+
+    if (isFrenzy)
+    {
+        DrawText("Wrestler Rush!", gameWidth*0.5, gameHeight*0.2, 36 + Math.abs(Math.sin(Date.now()*0.0075))*10.0, "#FFD800", -2, "Arial", "Bold", "center", "center", 10);
+    }
+}
+
+let particles = [];
+let ParticleTypeHit = 0;
+SpawnParticle = (x, y, type) =>
+{
+    switch (type)
+    {
+        case ParticleTypeHit:
+        {
+            let randAngle = Math.random()*360;
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+        } break;
+    }
+}
+
+DrawParticles = () =>
+{
+    for (let i = 0; i < particles.length; ++i)
+    {
+        let p = particles[i];
+        PushMatrix(p.x, p.y, p.a);
+        let alpha = 1.0 - Math.min(Math.max(p.t / p.lifetime, 0.0), 1.0);
+        alpha = Math.min(Math.floor(alpha*16), 15);
+        let aValues = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+        let color = p.c + aValues[alpha];
+        DrawRect(0, 0, p.w, p.h, color);
+        PopMatrix();
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.a += p.va;
+        p.w += p.vw;
+        p.h += p.vh;
+
+        p.t++;
+        if (p.t >= p.lifetime)
+        {
+            particles.splice(i, 1);
+            --i;
+        }
+    }
 }
 let PlayerStateIdle = 0;
 let PlayerStateBelly = 1;
@@ -591,7 +734,7 @@ class Player
                     this.Idle();
                 }
 
-                if (touch.down && this.hitConfirm)
+                if (touch.lastDown <= 3 && this.hitConfirm && IsEnemyInBounceZone())
                 {
                     // re-animate belly bounce here...
                     this.BellyBounce();
@@ -600,21 +743,28 @@ class Player
 
             case PlayerStateHit:
             {
-                this.timer--;
-                if (this.timer == 0)
+                if (touch.lastDown <= 5 && this.health > 0 && IsEnemyInBounceZone())
                 {
-                    if (this.health == 0)
+                        this.BellyBounce();
+                }
+                else
+                {
+                    this.timer--;
+                    if (this.timer == 0)
                     {
-                        this.bellyOffset.x = 10;
-                        this.bellyOffset.y = 10;
-                        nextState = GameOver;
-                        this.state = PlayerStateDead;
+                        if (this.health == 0)
+                        {
+                            this.bellyOffset.x = 10;
+                            this.bellyOffset.y = 10;
+                            nextState = GameOver;
+                            this.state = PlayerStateDead;
 
-                        zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
-                    }
-                    else
-                    {
-                        this.Idle();
+                            zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
+                        }
+                        else
+                        {
+                            this.Idle();
+                        }
                     }
                 }
             } break;
@@ -680,13 +830,17 @@ class Player
     IsBellyBounceAttacking()
     {
         return (this.state == PlayerStateBelly) &&
-               ((this.timer >= BellyBounceTime - BellyBounceAttackTime) || (this.hitConfirm && this.timer >= 7));
+               ((this.timer >= BellyBounceTime - BellyBounceAttackTime));// || (this.hitConfirm && this.timer >= 7));
     }
 
     OnBounce(enemy)
     {
-        this.timer = 15;
+        //this.timer = 15;
         this.hitConfirm = true;
+        this.bellyOffset.xLast = 0;
+        this.bellyOffset.yLast = 0;
+        this.bellyOffset.x = 15;
+        this.bellyOffset.y = 15;
         this.score++;
 
         let highScore = localStorage.getItem("bigchamp.highscore");
@@ -938,8 +1092,8 @@ class Enemy
         this.state = EnemyStateMoveToPlayer;
         this.angle = 0;
         this.color = "000";
-        this.bounceThreshold = player.pos.x + 80;
-        this.damageThreshold = player.pos.x + 10;
+        this.bounceThreshold = player.pos.x + 100;
+        this.damageThreshold = player.pos.x - 10;
         this.bounceOffAngleAdj = 0;
 
         // Rendering vars
@@ -978,6 +1132,7 @@ class Enemy
                 {
                     player.OnHit(this);
                     this.KillSelf();
+                    SpawnParticle(this.pos.x - Math.random()*20, this.pos.y - Math.random()*20, ParticleTypeHit);
                 }
             } break;
 
@@ -1049,8 +1204,11 @@ class Enemy
         {
             objs.splice(idx, 1);
         }
+    }
 
-        //CreateEnemy();
+    IsInBounceZone()
+    {
+        return this.state == EnemyStateMoveToPlayer && this.pos.x <= this.bounceThreshold + 20;
     }
 
     Draw()
@@ -1495,7 +1653,7 @@ TouchState = (reason) =>
 
         case Draw:
         {
-            DrawText("Tap To Start", gameWidth*0.5, gameHeight*0.5, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            DrawText("Tap", gameWidth*0.5, gameHeight*0.5, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
         } break;
     }
 }
@@ -1504,6 +1662,14 @@ MainMenu = (reason) =>
 {
     switch (reason)
     {
+        case Enter:
+        {
+            isFrenzy = false;
+            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 0);
+            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 250);
+            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 500);
+        } break;
+
         case Tick:
         {
             if (touch.down)
@@ -1516,7 +1682,24 @@ MainMenu = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
-            DrawText("Menu", gameWidth*0.5, gameHeight*0.3, 72, "#FFF", 0, "Arial", "Bold", "center", "center", 12);
+            let bounceIdx = Date.now() % 400;
+            let color = "#FF6A00";
+            if (bounceIdx < 75)
+            {
+                color = "#FFD800";
+            }
+            else if (bounceIdx < 150)
+            {
+                color = "#FFA000";
+            }
+            let size = 90 + Math.abs(Math.sin((bounceIdx / 400)*Math.PI))*1.5;
+            DrawText("Big Champ", gameWidth*0.5, gameHeight*0.3, size, "#FFF", 0, "Arial", "Bold", "center", "center", 20, color);
+            DrawText("Big Champ", gameWidth*0.5, gameHeight*0.3, size, "#FFF", 0, "Arial", "Bold", "center", "center", 12, "#000");
+            DrawText("Weighing in at 404 lbs!", gameWidth*0.5, gameHeight*0.45, 32, "#FFF", 0, "Arial", "Bold", "center", "center", 9, "#000");
+            if (Date.now()%800 < 600)
+            {
+                DrawText("- Tap To Start -", gameWidth*0.5, gameHeight*0.85, 32, "#FFD800", 0, "Arial", "Bold", "center", "center", 9);
+            }
         } break;
     }
 }
@@ -1568,6 +1751,7 @@ GameState = (reason) =>
             DrawBackground();
             objs.forEach(o => o.Draw());
             DrawHud();
+            DrawParticles();
         } break;
     }
 }
@@ -1582,7 +1766,24 @@ GameOver = (reason) =>
         {
             clearTimeout(enemyTimer);
             gameOverState = 0;
-            gameOverTimer = setInterval(() => {if (gameOverState < 10) { gameOverState++; } }, 350);
+            gameOverTimer = setInterval(() =>
+            {
+                if (gameOverState < 10)
+                {
+                    gameOverState++;
+                    if (gameOverState == 2 || gameOverState == 4 || gameOverState == 6)
+                    {
+                        zzfx(...[,,1983,,,.06,,.53,-68,,,,,,9,.2]); // Blip 664
+                    }
+                    else if (gameOverState == 8 && player.isHighScore)
+                    {
+                        zzfx(...[,,703,.02,.03,.19,,.92,-8,,,,,,,.1,,.63,.07]); // Jump 813
+                        setTimeout(() => {zzfx(...[,,703,.02,.03,.19,,.92,-8,,,,,,,.1,,.63,.07]);}, 200);
+                        setTimeout(() => {zzfx(...[,,703,.02,.03,.19,,.92,-8,,,,,,,.1,,.63,.07]);}, 400);
+                        setTimeout(() => {zzfx(...[,,511,.31,.1,1.75,4,2.74,.6,.6,,,,.7,,.2,,.75,.09]);}, 600);
+                    }
+                }
+            }, 250);
         } break;
 
         case Exit:
@@ -1604,6 +1805,7 @@ GameOver = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
+            DrawParticles();
             
             if (gameOverState >= 2)
             {
@@ -1612,7 +1814,7 @@ GameOver = (reason) =>
 
             if (gameOverState >= 4)
             {
-                DrawText("Eliminations: " + player.score, gameWidth*0.5, gameHeight*0.4, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
+                DrawText("Eliminations: " + player.score, gameWidth*0.5, gameHeight*0.42, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
             }
 
             if (gameOverState >= 6)
@@ -1622,14 +1824,14 @@ GameOver = (reason) =>
                 {
                     highScore = 0;
                 }
-                DrawText("Best: " + highScore, gameWidth*0.5, gameHeight*0.48, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
+                DrawText("Best: " + highScore, gameWidth*0.5, gameHeight*0.52, 36, "#FFF", 0, "Arial", "Bold", "center", "center", 8);
             }
             
             if (gameOverState >= 8)
             {
-                if (player.isHighScore)
+                //if (player.isHighScore)
                 {
-                    DrawText("New Best!", gameWidth*0.5, gameHeight*0.6, 36 + Math.abs(Math.sin(Date.now()*0.005))*10.0, "#04D84E", -10, "Arial", "Bold", "center", "center", 10);
+                    DrawText("New Best!", gameWidth*0.5, gameHeight*0.63, 36 + Math.abs(Math.sin(Date.now()*0.005))*10.0, "#04D84E", -10, "Arial", "Bold", "center", "center", 10);
                 }
             }
         } break;
@@ -1643,7 +1845,7 @@ RenderTest = (reason) =>
         case Enter:
         {
             player.Reset();
-            CreateEnemy();
+            objs.push(new Enemy_SlowRun());
             objs[1].pos.x = 600;
             objs[1].pos.y = 300;
             objs[1].SetAnim(EnemyAnimJump);
@@ -1660,6 +1862,8 @@ RenderTest = (reason) =>
                     player.state = PlayerStateIdle;
                 }
                 //player.OnHit();
+
+                SpawnParticle(gameWidth*0.5, gameHeight*0.5, ParticleTypeHit);
             }
             objs[1].Animate();
         } break;
@@ -1669,6 +1873,7 @@ RenderTest = (reason) =>
             DrawBackground();
             objs.forEach(o => o.Draw());
             DrawHud();
+            DrawParticles();
         } break;
     }
 }
