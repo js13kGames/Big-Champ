@@ -22,8 +22,8 @@ window.addEventListener("touchend", e => { touch.up = true; touch.down = false; 
 window.addEventListener("touchcancel", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); });
 
 // Audio (restart Zzfx audio context on user input) ---------------------------
-document.documentElement.addEventListener("mousedown", () => { if (ZZFX.x.state !== 'running') {ZZFX.x.resume();} });
-document.documentElement.addEventListener("touchstart", () => { if (ZZFX.x.state !== 'running') {ZZFX.x.resume();} });
+document.documentElement.addEventListener("mousedown", () => { if (zzfxX.state !== 'running') {zzfxX.resume();} });
+document.documentElement.addEventListener("touchstart", () => { if (zzfxX.state !== 'running') {zzfxX.resume();} });
 
 // Rendering ------------------------------------------------------------------
 let PushMatrix = (x, y, angle = 0) => { ctx.save(); ctx.translate(x, y); ctx.rotate(angle * Deg2Rad); }

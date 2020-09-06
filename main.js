@@ -24,8 +24,6 @@ let TouchState = (reason) =>
         {
             if (touch.down)
             {
-                //zzfx(...[0.8,0,2100,,,0.3,3,3,,,-400,,,2])
-                //zzfx(...[4,0,523.25,,2,,1,,,,,,0.2,,,,0.01,0.5,0.01])
                 tkNextState = MainMenu;
             }
         } break;
