@@ -11,11 +11,12 @@ type tk.js utils.js player.js enemy.js enemy_SlowRun.js enemy_FastRun.js enemy_S
 REM Minify
 call google-closure-compiler --compilation_level SIMPLE --js build\game.js --js_output_file build\game.min.js
 
-REM ZIP
-call "C:\Program Files\7-Zip\7z.exe" a -tzip build\404.zip build\index.html build\game.min.js build\zzfx.js build\zzfxm.min.js
-
-REM Cleanup
+REM Remove non-minifiled file and intermediate file
+del build\game.js /q
 del build\*.map /q
+
+REM ZIP
+call "C:\Program Files\7-Zip\7z.exe" a -tzip build\404.zip .\build\*
 
 REM Wait for user input
 pause
