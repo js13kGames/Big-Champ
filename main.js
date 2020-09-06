@@ -15,6 +15,7 @@ let TouchState = (reason) =>
         {
             if (touch.down)
             {
+                setTimeout(() => {let myAudioNode = zzfxP(...mySongData); myAudioNode.loop = true;}, 1500);
                 tkNextState = MainMenu;
             }
         } break;
@@ -33,10 +34,9 @@ let MainMenu = (reason) =>
         case Enter:
         {
             isFrenzy = false;
+            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 0);
             setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 250);
             setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 500);
-            setTimeout(() => {zzfx(...[,0,587,,,.28,3,.07,,,,,,,,.1,,.62,.1]);}, 750);
-            setTimeout(() => {let myAudioNode = zzfxP(...mySongData); myAudioNode.loop = true;}, 1000);
         } break;
 
         case Tick:

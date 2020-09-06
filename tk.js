@@ -15,11 +15,11 @@ let ctx = canvas.getContext('2d');
 
 // Input (mouse/touch only!) --------------------------------------------------
 let touch = {x: 0, y: 0, up: false, down: false, held: false, lastDown: 10000}
-window.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; e.preventDefault(); });
-window.addEventListener("mouseup", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); });
-window.addEventListener("touchstart", e => { touch.up = false; touch.down = true; touch.held = true; e.preventDefault(); });
-window.addEventListener("touchend", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); });
-window.addEventListener("touchcancel", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); });
+window.addEventListener("mousedown", e => { touch.up = false, touch.down = true; touch.held = true; e.preventDefault(); }, { capture: false, passive: false });
+window.addEventListener("mouseup", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); }, { capture: false, passive: false });
+window.addEventListener("touchstart", e => { touch.up = false; touch.down = true; touch.held = true; e.preventDefault(); }, { capture: false, passive: false });
+window.addEventListener("touchend", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); }, { capture: false, passive: false });
+window.addEventListener("touchcancel", e => { touch.up = true; touch.down = false; touch.held = false; e.preventDefault(); }, { capture: false, passive: false });
 
 // Audio (restart Zzfx audio context on user input) ---------------------------
 document.documentElement.addEventListener("mousedown", () => { if (zzfxX.state !== 'running') {zzfxX.resume();} });
