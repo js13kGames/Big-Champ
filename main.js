@@ -18,7 +18,8 @@ let TouchState = (reason) =>
         {
             if (touch.down)
             {
-                setTimeout(() => {myAudioNode = zzfxP(...mySongData); myAudioNode.loop = true;}, 1500);
+                myAudioNode = zzfxP(...mySongData);
+                myAudioNode.loop = true;
                 tkNextState = MainMenu;
             }
         } break;
@@ -48,6 +49,11 @@ let MainMenu = (reason) =>
             {
                 if (touch.x >= actualWidth*0.78 && touch.y >= actualHeight*0.80)
                 {
+                    let oldSfxOn = sfxOn;
+                    sfxOn = true;
+                    zzfx(...[,,523,.01,,.07,3,.11,46,10,,,,,,.1,.03,.32,.01]); // Blip 11
+                    sfxOn = oldSfxOn;
+
                     if (sfxOn && musicOn)
                     {
                         sfxOn = false;

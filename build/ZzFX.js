@@ -1,5 +1,5 @@
 // zzfx() - the universal entry point -- returns a AudioBufferSourceNode
-zzfx=(...t)=>zzfxP(zzfxG(...t))
+zzfx=(...t)=>{ if (!sfxOn) { return; } zzfxP(zzfxG(...t)) }
 
 // zzfxP() - the sound player -- returns a AudioBufferSourceNode
 zzfxP=(...t)=>{let e=zzfxX.createBufferSource(),f=zzfxX.createBuffer(t.length,t[0].length,zzfxR);t.map((d,i)=>f.getChannelData(i).set(d)),e.buffer=f,e.connect(zzfxX.destination),e.start();return e}
