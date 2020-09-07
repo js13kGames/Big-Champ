@@ -359,12 +359,28 @@ let DrawBackground = () =>
     PopMatrix();
 }
 
+let DrawHeart = (x, y, size, color) =>
+{
+    PushMatrix(x, y, 0);
+    DrawCircle(-size*0.23, -size*0.25, size*0.75, "#000");
+    DrawCircle(size*0.23, -size*0.25, size*0.75, "#000");
+    DrawRect(-size*0.38, -size*0.08, size*1.2, size*1.0, "#000", 45.0);
+    DrawRect(size*0.38, -size*0.08, size*1.2, size*1.0, "#000", -45.0);
+    DrawRect(0, size*0.11, size*1.25, size*1.25, "#000", 45.0);
+
+    DrawCircle(-size*0.23, -size*0.25, size*0.5, color);
+    DrawCircle(size*0.23, -size*0.25, size*0.5, color);
+    DrawRect(-size*0.38, -size*0.08, size, size*0.5, color, 45.0);
+    DrawRect(size*0.38, -size*0.08, size, size*0.5, color, -45.0);
+    DrawRect(0, size*0.11, size*0.75, size*0.75, color, 45.0);
+    PopMatrix();
+}
+
 let DrawHud = () =>
 {
     for (let i = 0; i < 3; ++i)
     {
-        DrawRect(40 + (40*i), 32, 28, 28, "#000");
-        DrawRect(40 + (40*i), 32, 20, 20, player.health > i ? "#F00" : "#444");
+        DrawHeart(50 + (55*i), 40, 20, player.health > i ? "#F00" : "#444");
     }
 
     DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#FFF", 0, "Arial", "Bold", "right", "center", 8);
