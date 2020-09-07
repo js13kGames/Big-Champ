@@ -8,8 +8,8 @@ class Enemy_SlowRun extends Enemy
         this.styleLower = EnemyStyleLowerShorts;
         this.styleUpper = EnemyStyleUpperNone;
         this.styleHead = EnemyStyleHeadShortHair;
-        this.skinColor = "#DC774F";
-        this.outlineColor = "#A3583A";
+        this.skinColor = "#CF7B41";
+        this.outlineColor = "#87502B";
         this.outfitColor = "#B00";
         this.bootColor = "#B00";
         this.lacesColor = "#FFF";

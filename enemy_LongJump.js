@@ -11,8 +11,8 @@ class Enemy_LongJump extends Enemy
         this.styleLower = EnemyStyleLowerShorts;
         this.styleUpper = EnemyStyleUpperTankTop;
         this.styleHead = EnemyStyleHeadMask;
-        this.skinColor = "#C17920";
-        this.outlineColor = "#935C19";
+        this.skinColor = "#6B5142";
+        this.outlineColor = "#44332A";
         this.outfitColor = "#6D59C8";
         this.bootColor = "#6D59C8";
         this.lacesColor = "#FFF";

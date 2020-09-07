@@ -10,8 +10,8 @@ class Enemy_SlowBounce extends Enemy
         this.styleLower = EnemyStyleLowerShorts;
         this.styleUpper = EnemyStyleUpperNone;
         this.styleHead = EnemyStyleHeadMask;
-        this.skinColor = "#CF7B41";
-        this.outlineColor = "#87502B";
+        this.skinColor = "#C17920";
+        this.outlineColor = "#935C19";
         this.outfitColor = "#CCC";
         this.bootColor = "#CCC";
         this.lacesColor = "#000";
