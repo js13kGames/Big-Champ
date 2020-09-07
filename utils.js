@@ -224,7 +224,23 @@ let CreateEnemy = () =>
             }
 
             let nextDelay = es.minNextDelay + (Math.random()*(es.maxNextDelay - es.minNextDelay))
-            enemyTimer = setTimeout(CreateEnemy, (spawnDelay + nextDelay) * 1000);            
+
+            if (player.healthTimer <= 0)
+            {
+                player.healthTimer = 20;
+                if (player.health < 3)
+                {
+                    setTimeout(()=>
+                    {
+                        objs.push(new Enemy_LongJump());
+                        objs[objs.length - 1].isHeart = true;
+                        zzfx(...[,,60,.03,.01,.33,1,.53,-5.7,,,,,,,,,.76]);
+                    }, (spawnDelay * 1000) + 1250);
+                    nextDelay += 2.5;
+                }
+            }
+
+            enemyTimer = setTimeout(CreateEnemy, (spawnDelay + nextDelay) * 1000);
 
             break;
         }

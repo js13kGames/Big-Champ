@@ -38,6 +38,7 @@ class Enemy
         this.bounceThreshold = player.pos.x + 90;
         this.damageThreshold = player.pos.x - 0;
         this.bounceOffAngleAdj = 0;
+        this.isHeart = false;
 
         // Rendering vars
         this.styleLower = EnemyStyleLowerShorts;
@@ -157,6 +158,14 @@ class Enemy
     Draw()
     {
         PushMatrix(this.pos.x, this.pos.y, this.angle);
+        
+        if (this.isHeart)
+        {
+            DrawHeart(0, 0, 35, "#F00");
+            PopMatrix();
+            return;
+        }
+
         switch (this.frame)
         {
             case EnemyFrameIdle:

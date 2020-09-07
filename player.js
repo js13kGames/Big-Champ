@@ -27,6 +27,7 @@ class Player
         this.health = 3;
         this.score = 0;
         this.isHighScore = false;
+        this.healthTimer = 15;
         clearInterval(this.dizzyVFXTimer);
     }
 
@@ -160,6 +161,7 @@ class Player
         this.bellyOffset.x = 15;
         this.bellyOffset.y = 15;
         this.score++;
+        this.healthTimer--;
 
         let highScore = localStorage.getItem("bigchamp.highscore");
         if (highScore == null || highScore < this.score)
@@ -178,16 +180,30 @@ class Player
 
     OnHit(enemy)
     {
-        if (this.health > 0)
+        if (enemy.isHeart)
         {
-            this.timer = 15;
-            this.health--;
-            this.timer = PlayerHitTime;
-            this.state = PlayerStateHit;
-            this.bellyOffset.x = 5;
-            this.bellyOffset.y = 5;
+            if (this.health < 3)
+            {
+                this.health++;
+                this.bellyOffset.x = 5;
+                this.bellyOffset.y = 5;
 
-            zzfx(...[,,272,,,.16,3,2.99,-1.7,1.6,,,,1.4,-0.7,.2,,.68,.03]); // Hit 54
+                zzfx(...[,,716,,.02,.13,,1.71,,,636,.03,,.1,,.1,,.58,.01]); // Pickup 48
+            }
+        }
+        else
+        {
+            if (this.health > 0)
+            {
+                this.timer = 15;
+                this.health--;
+                this.timer = PlayerHitTime;
+                this.state = PlayerStateHit;
+                this.bellyOffset.x = 5;
+                this.bellyOffset.y = 5;
+
+                zzfx(...[,,272,,,.16,3,2.99,-1.7,1.6,,,,1.4,-0.7,.2,,.68,.03]); // Hit 54
+            }
         }
     }
 
