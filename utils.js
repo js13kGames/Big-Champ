@@ -32,7 +32,7 @@ enemySpawnInfo.push({
 });
 enemySpawnInfo.push({
     maxPlayerScore: 8,
-    possibleEnemyTypes: [5],
+    possibleEnemyTypes: [5,6],
     minSpawnCount: 1,
     maxSpawnCount: 1,
     minSpawnDelay: 0,
