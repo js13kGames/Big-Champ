@@ -431,10 +431,10 @@ let SpawnParticle = (x, y, type) =>
         case ParticleTypeDizzy:
         {
             let randAngle = Math.random()*360;
-            particles.push({x: x, y: y, vx: 4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
-            particles.push({x: x, y: y, vx: 4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle + 45, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
-            particles.push({x: x + 50, y: y - 10, vx: -4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
-            particles.push({x: x + 50, y: y - 10, vx: -4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle + 45, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
+            particles.push({x: x, y: y, vx: 4, vy: 0, w: 5, h: 5, vw: 0, vh: 0, a: randAngle, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
+            particles.push({x: x, y: y, vx: 4, vy: 0, w: 5, h: 5, vw: 0, vh: 0, a: randAngle + 45, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
+            particles.push({x: x + 50, y: y - 5, vx: -4, vy: 0, w: 5, h: 5, vw: 0, vh: 0, a: randAngle, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
+            particles.push({x: x + 50, y: y - 5, vx: -4, vy: 0, w: 5, h: 5, vw: 0, vh: 0, a: randAngle + 45, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
         } break;
     }
 }
