@@ -89,6 +89,7 @@ let MainMenu = (reason) =>
         {
             DrawBackground();
             objs.forEach(o => o.Draw());
+
             let bounceIdx = Date.now() % 400;
             let color = "#FF6A00";
             if (bounceIdx < 75)

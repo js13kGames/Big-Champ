@@ -417,15 +417,17 @@ let SpawnParticle = (x, y, type) =>
         case ParticleTypeHit:
         {
             let randAngle = Math.random()*360;
-            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
-            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF", f:true});
+            particles.push({x: x, y: y, vx: 0, vy: 0, w: 50, h: 50, vw: 4, vh: 4, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF", f:true});
         } break;
 
         case ParticleTypeDizzy:
         {
             let randAngle = Math.random()*360;
-            particles.push({x: x, y: y, vx: 0, vy: 0, w: 10, h: 10, vw: 2, vh: 2, a: randAngle, va: 1, lifetime: 10, t: 0, c: "#FFF"});
-            particles.push({x: x, y: y, vx: 0, vy: 0, w: 10, h: 10, vw: 2, vh: 2, a: randAngle + 45, va: 1, lifetime: 10, t: 0, c: "#FFF"});
+            particles.push({x: x, y: y, vx: 4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
+            particles.push({x: x, y: y, vx: 4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle + 45, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
+            particles.push({x: x + 50, y: y - 10, vx: -4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
+            particles.push({x: x + 50, y: y - 10, vx: -4, vy: 0, w: 4, h: 4, vw: 0, vh: 0, a: randAngle + 45, va: 1, lifetime: 17, t: 0, c: "#FFF", f:false});
         } break;
     }
 }
@@ -439,7 +441,7 @@ let DrawParticles = () =>
         let alpha = 1.0 - Math.min(Math.max(p.t / p.lifetime, 0.0), 1.0);
         alpha = Math.min(Math.floor(alpha*16), 15);
         let aValues = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
-        let color = p.c + aValues[alpha];
+        let color = p.c + (p.f ? aValues[alpha] : "F");
         DrawRect(0, 0, p.w, p.h, color);
         PopMatrix();
 

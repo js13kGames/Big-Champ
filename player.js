@@ -17,7 +17,6 @@ class Player
         this.bellyOffset = new V2(0, 0);
         this.bellyOffset.xLast = 0;
         this.bellyOffset.yLast = 0;
-        this.dizzyVFXTimer = undefined;
 
         this.Reset();
     }
@@ -28,7 +27,6 @@ class Player
         this.score = 0;
         this.isHighScore = false;
         this.healthTimer = 15;
-        clearInterval(this.dizzyVFXTimer);
     }
 
     Tick()
@@ -75,7 +73,7 @@ class Player
                             this.bellyOffset.y = 10;
                             tkNextState = GameOver;
                             this.state = PlayerStateDead;
-                            //this.dizzyVFXTimer = setInterval(() => SpawnParticle(this.pos.x, this.pos.y), 1000);
+                            this.timer = 15;
 
                             zzfx(...[,,56,,.08,.46,3,2.52,,,,,,1.7,.7,.1,,.62,.01]); // Hit 68
                         }
@@ -89,7 +87,12 @@ class Player
 
             case PlayerStateDead:
             {
-
+                this.timer--;
+                if (this.timer <= 0)
+                {
+                    SpawnParticle(this.pos.x - 50, this.pos.y - 120, ParticleTypeDizzy);
+                    this.timer = Math.floor(20);
+                }
             } break;
 
             case PlayerStateIntro:
