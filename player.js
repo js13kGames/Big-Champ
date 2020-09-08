@@ -165,6 +165,7 @@ class Player
         this.bellyOffset.y = 15;
         this.score++;
         this.healthTimer--;
+        hudScoreScale = 1;
 
         let highScore = localStorage.getItem("bigchamp.highscore");
         if (highScore == null || highScore < this.score)
@@ -187,6 +188,7 @@ class Player
         {
             if (this.health < 3)
             {
+                hudHeartScales[this.health] = 1;
                 this.health++;
                 this.bellyOffset.x = 5;
                 this.bellyOffset.y = 5;
@@ -200,6 +202,7 @@ class Player
             {
                 this.timer = 15;
                 this.health--;
+                hudHeartScales[this.health] = 1;
                 this.timer = PlayerHitTime;
                 this.state = PlayerStateHit;
                 this.bellyOffset.x = 5;

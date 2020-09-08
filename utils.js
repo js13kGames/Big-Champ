@@ -392,14 +392,21 @@ let DrawHeart = (x, y, size, color) =>
     PopMatrix();
 }
 
+let hudHeartScales = [];
+hudHeartScales.push(0);
+hudHeartScales.push(0);
+hudHeartScales.push(0);
+let hudScoreScale = 0;
 let DrawHud = () =>
 {
     for (let i = 0; i < 3; ++i)
     {
-        DrawHeart(50 + (55*i), 40, 20, player.health > i ? "#F00" : "#444");
+        hudHeartScales[i] *= 0.85;
+        DrawHeart(50 + (55*i), 40, 20 + (20 * hudHeartScales[i]), player.health > i ? "#F00" : "#444");
     }
 
-    DrawText(player.score.toString(), gameWidth - 40, 50, 40, "#FFF", 0, "Arial", "Bold", "right", "center", 8);
+    hudScoreScale *= 0.85;
+    DrawText(player.score.toString(), gameWidth - 40, 50, 40 + (20 * hudScoreScale), "#FFF", 0, "Arial", "Bold", "right", "center", 8);
 
     if (isFrenzy)
     {
