@@ -87,7 +87,7 @@ enemySpawnInfo.push({
     maxSpawnCount: 4,
     minSpawnDelay: 0.3,
     maxSpawnDelay: 0.5,
-    minNextDelay: 1.15,
+    minNextDelay: 1.25,
     maxNextDelay: 1.25,
 });
 enemySpawnInfo.push({
