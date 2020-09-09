@@ -170,9 +170,11 @@ let GameLoop = (curTime) =>
     }
 
     // Clear canvas
-    ctx.rect(0, 0, gameWidth, gameHeight);
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = clearColor;
-    ctx.fill();
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
 
     // Draw state
     if (tkState)
@@ -181,6 +183,17 @@ let GameLoop = (curTime) =>
     }
 
     previousGameLoopTime = curTime;
+}
+
+let IsOnMobile = () =>
+{
+    return navigator.userAgent.match(/Android/i) ||
+           navigator.userAgent.match(/webOS/i) ||
+           navigator.userAgent.match(/iPhone/i) ||
+           navigator.userAgent.match(/iPad/i) ||
+           navigator.userAgent.match(/iPod/i) ||
+           navigator.userAgent.match(/BlackBerry/i) ||
+           navigator.userAgent.match(/Windows Phone/i);
 }
 
 let actualWidth = -1;
@@ -195,6 +208,16 @@ let FitToScreen = () =>
     {
         newHeight = window.innerHeight;
         newWidth = newHeight * aspectRatio;
+    }
+
+    // Max width on desktop
+    if (!IsOnMobile())
+    {
+        if (newHeight > gameHeight*1.5)
+        {
+            newHeight = gameHeight*1.5;
+            newWidth = newHeight * aspectRatio;
+        }
     }
 
     // Apply it
