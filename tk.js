@@ -196,8 +196,8 @@ let IsOnMobile = () =>
            navigator.userAgent.match(/Windows Phone/i);
 }
 
-let actualWidth = -1;
-let actualHeight = -1;
+let actualWidth = gameWidth;
+let actualHeight = gameHeight;
 let FitToScreen = () =>
 {
     // Calculate desired screen size
